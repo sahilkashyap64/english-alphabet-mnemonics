@@ -340,33 +340,8 @@
                                     <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
                                 </div>
                                 <div class="px-2">
-                                    <ul class="space-y-2">
-                                        <li>
-                                            <a href="#a" class="flex items-center px-4 py-2 text-gray-700 bg-gray-100 rounded-md font-medium" onclick="showLetter('a'); isOpen = false;">
-                A - Apple
-              </a>
-                                        </li>
-                                        <li>
-                                            <a href="#b" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md" onclick="showLetter('b'); isOpen = false;">
-                B - Ball
-              </a>
-                                        </li>
-                                        <li>
-                                            <a href="#c" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md" onclick="showLetter('c'); isOpen = false;">
-                C - Cat
-              </a>
-                                        </li>
-                                        <li>
-                                            <a href="#d" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md" onclick="showLetter('d'); isOpen = false;">
-                D - Dog
-              </a>
-                                        </li>
-                                        <li>
-                                            <a href="#more" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md" onclick="isOpen = false;">
-                More Letters...
-              </a>
-                                        </li>
-                                    </ul>
+                                    <ul class="space-y-2" id="alphabet-sidebar-list">
+                                         </ul>
                                 </div>
                                 <div class="px-4 mt-6">
                                     <a href="#settings" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md" onclick="isOpen = false;">
@@ -1430,6 +1405,45 @@ alphabet.forEach((item, index) => {
     }
   `;
   buttonContainer.appendChild(button);
+
+  const sidebarList = document.getElementById('alphabet-sidebar-list');
+  const sidebarLinkMap = {}; // optional: track sidebar links if needed for highlighting
+
+  alphabet.forEach((item, index) => {
+    const li = document.createElement('li');
+
+    const link = document.createElement('a');
+    link.href = `#${item.letter}`;
+    link.className = `
+      flex items-center px-4 py-2 rounded-md font-medium
+      ${index === 0 ? 'text-gray-700 bg-gray-100' : 'text-gray-600 hover:bg-gray-100'}
+    `.trim();
+    link.textContent = `${item.letter.toUpperCase()} - ${item.word}`;
+    link.onclick = () => {
+      showLetter(item.letter);
+      if (typeof isOpen !== 'undefined') isOpen = false;
+    };
+
+    li.appendChild(link);
+    sidebarList.appendChild(li);
+
+    sidebarLinkMap[item.letter] = link;
+  });
+
+  // Optional: updateSidebarHighlight inside updateDisplay
+  function updateSidebarHighlight() {
+    const current = alphabet[currentLetterIndex].letter;
+    Object.entries(sidebarLinkMap).forEach(([letter, el]) => {
+      if (letter === current) {
+        el.classList.add('bg-gray-100', 'text-gray-700');
+        el.classList.remove('text-gray-600');
+      } else {
+        el.classList.remove('bg-gray-100', 'text-gray-700');
+        el.classList.add('text-gray-600');
+      }
+    });
+  }
+
 });
 </script>
 
