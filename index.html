@@ -300,60 +300,94 @@
                 <div id="root" class="min-h-screen bg-gray-100">
                     <div class="flex h-screen overflow-hidden">
                         <!-- Sidebar Navigation -->
-                        <div x-data="{ isOpen: false }" class="relative">
-                            <!-- Mobile menu button -->
-                            <button type="button" class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" @click="isOpen = !isOpen" aria-controls="mobile-menu" :aria-expanded="isOpen">
-        <!-- Icon when menu is closed -->
-        <svg x-cloak x-show="!isOpen" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <!-- Wrap navigation in an Alpine component -->
+<div x-data="{ isOpen: false, sidebarVisible: true }" class="relative">
+
+    <!-- Mobile menu button (visible on mobile only) -->
+    <button type="button" 
+            class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+            @click="isOpen = !isOpen" 
+            aria-controls="mobile-menu" 
+            :aria-expanded="isOpen">
+      <!-- Icon when menu is closed -->
+      <svg x-cloak x-show="!isOpen" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+      <!-- Icon when menu is open -->
+      <svg x-cloak x-show="isOpen" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  
+    <!-- Desktop Sidebar (visible on large screens only) -->
+    <nav x-show="sidebarVisible" class="hidden lg:flex flex-col w-64 h-full bg-white border-r border-gray-200 py-6 overflow-y-auto">
+      <div class="px-4 mb-8">
+        <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
+      </div>
+      <!-- Scrollable container for dynamic list -->
+      <div class="flex-1 px-2 overflow-y-auto" style="max-height: calc(100vh - 150px);">
+        <ul id="alphabet-sidebar" class="space-y-2">
+          <!-- Dynamic items injected here -->
+        </ul>
+      </div>
+      <div class="px-4 mt-6">
+        <a href="#settings" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          Settings
+        </a>
+      </div>
+      <!-- Desktop Sidebar Toggle Button -->
+      <button 
+        class="hidden lg:block absolute top-4 right-0 z-50 p-2 rounded-md bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+        @click="sidebarVisible = !sidebarVisible"
+      >
+        <svg x-show="sidebarVisible" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <!-- Arrow left icon -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
-        <!-- Icon when menu is open -->
-        <svg x-cloak x-show="isOpen" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        <svg x-show="!sidebarVisible" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <!-- Arrow right icon -->
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
       </button>
-
-                            <!-- Sidebar for desktop -->
-                            <nav class="hidden lg:flex flex-col w-64 h-full bg-white border-r border-gray-200 py-6">
-                                <div class="px-4 mb-8">
-                                    <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
-                                </div>
-                                <div class="flex-1 px-2">
-                                    <ul id="alphabet-sidebar" class="space-y-2"></ul>
-                                  </div>
-                                  
-                                <div class="px-4 mt-6">
-                                    <a href="#settings" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-            Settings
-          </a>
-                                </div>
-                            </nav>
-
-                            <!-- Mobile menu -->
-                            <div id="mobile-menu" x-cloak x-show="isOpen" x-transition:enter="transition ease-out duration-100 transform" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75 transform"
-                                x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" @click.away="isOpen = false" @resize.window="if (window.innerWidth > 1024) isOpen = false" class="lg:hidden fixed top-0 left-0 w-64 h-full z-40 bg-white border-r border-gray-200 py-6">
-                                <div class="px-4 mb-8">
-                                    <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
-                                </div>
-                                <div class="px-2">
-                                    <ul class="space-y-2" id="alphabet-sidebar-list">
-                                         </ul>
-                                </div>
-                                <div class="px-4 mt-6">
-                                    <a href="#settings" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md" onclick="isOpen = false;">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-            Settings
-          </a>
-                                </div>
-                            </div>
-                        </div>
+    </nav>
+  
+    <!-- Mobile Menu (visible on small screens only) -->
+    <div id="mobile-menu" x-cloak x-show="isOpen" 
+         x-transition:enter="transition ease-out duration-100 transform"
+         x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-75 transform" 
+         x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+         @click.away="isOpen = false" @resize.window="if (window.innerWidth > 1024) isOpen = false"
+         class="lg:hidden fixed top-0 left-0 w-64 h-full z-40 bg-white border-r border-gray-200 py-6 overflow-y-auto">
+      <div class="px-4 mb-8">
+        <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
+      </div>
+      <div class="px-2">
+        <ul id="alphabet-sidebar-list" class="space-y-2">
+          <!-- Dynamic mobile menu items injected here -->
+        </ul>
+      </div>
+      <div class="px-4 mt-6">
+        <a href="#settings" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md" @click="isOpen = false">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          Settings
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  
 
                         <!-- Main Content Area -->
                         <main class="flex-1 overflow-auto">
@@ -1446,5 +1480,80 @@ alphabet.forEach((item, index) => {
 
 });
 </script>
+<!-- Dynamic Sidebar and Mobile Menu Generation -->
+<script>
+    // Generate sidebar items for desktop (id="alphabet-sidebar")
+    const desktopSidebar = document.getElementById('alphabet-sidebar');
+    // Also keep a map for dynamic highlighting
+    const sidebarLinkMap = {};
+  
+    alphabet.forEach((item, index) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `#${item.letter}`;
+      a.textContent = `${item.letter.toUpperCase()} - ${item.word}`;
+      a.onclick = () => {
+        showLetter(item.letter);
+        // Close mobile menu if open
+        if (typeof isOpen !== 'undefined') isOpen = false;
+      };
+      a.className = `flex items-center px-4 py-2 rounded-md font-medium ${
+        index === 0 ? 'text-gray-700 bg-gray-100' : 'text-gray-600 hover:bg-gray-100'
+      }`;
+      li.appendChild(a);
+      desktopSidebar.appendChild(li);
+      sidebarLinkMap[item.letter] = a;
+    });
+  
+    // Generate mobile menu items (id="alphabet-sidebar-list")
+    const mobileSidebar = document.getElementById('alphabet-sidebar-list');
+    alphabet.forEach((item, index) => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `#${item.letter}`;
+      a.textContent = `${item.letter.toUpperCase()} - ${item.word}`;
+      a.onclick = () => {
+        showLetter(item.letter);
+        // Close mobile menu
+        if (typeof isOpen !== 'undefined') isOpen = false;
+      };
+      a.className = `flex items-center px-4 py-2 rounded-md font-medium ${
+        index === 0 ? 'text-gray-700 bg-gray-100' : 'text-gray-600 hover:bg-gray-100'
+      }`;
+      li.appendChild(a);
+      mobileSidebar.appendChild(li);
+    });
+  
+    // Append a static "More Letters..." link to both menus
+    [desktopSidebar, mobileSidebar].forEach(sidebar => {
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="#more" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+        More Letters...
+      </a>`;
+      sidebar.appendChild(li);
+    });
+  
+    // Function to update highlight in the desktop sidebar
+    function updateSidebarHighlight() {
+      const current = alphabet[currentLetterIndex].letter;
+      Object.entries(sidebarLinkMap).forEach(([letter, el]) => {
+        if (letter === current) {
+          el.classList.add('bg-gray-100', 'text-gray-700');
+          el.classList.remove('text-gray-600');
+        } else {
+          el.classList.remove('bg-gray-100', 'text-gray-700');
+          el.classList.add('text-gray-600');
+        }
+      });
+    }
+  
+    // Extend your existing updateDisplay() function to call updateSidebarHighlight()
+    const originalUpdateDisplay = updateDisplay;
+    updateDisplay = function() {
+      originalUpdateDisplay();
+      updateSidebarHighlight();
+    };
+  </script>
+  
 
 </html>
