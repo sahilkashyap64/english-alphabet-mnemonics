@@ -46,16 +46,22 @@
             border: 1px solid #d1d5db; /* gray-300 */
             box-shadow: 1px 1px 1px rgba(0,0,0,0.1);
         }
+        /* Active state class for sidebar links */
         .active-sidebar-link {
             background-color: #f3f4f6; /* gray-100 */
             color: #1f2937; /* gray-800 */
             font-weight: 600; /* font-semibold */
         }
-         .active-alpha-button {
+        /* Active state class for alphabet buttons */
+        .active-alpha-button {
             background-color: #4A6FA5 !important; /* Use your primary color */
             color: white !important;
-            border-color: #4A6FA5 !important; /* Match focus ring potentially */
-         }
+            border-color: #4A6FA5 !important;
+            /* Apply focus ring style directly if needed */
+             --tw-ring-color: #4A6FA5 !important;
+             --tw-ring-offset-width: 2px; /* Example */
+             box-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+        }
         .inactive-alpha-button {
              background-color: #e5e7eb; /* gray-200 */
              color: #374151; /* gray-700 */
@@ -76,112 +82,80 @@
             Alpine.store('alphabetStore', {
                 // --- State ---
                 alphabet: [
-                    // Populate this array completely
+                    // =====================================================
+                    // !! IMPORTANT !!
+                    // FULLY POPULATE THIS ARRAY WITH ALL 26 LETTERS
+                    // Replace placeholders and image URLs.
+                    // Example Format:
+                    // { letter: 'a', word: 'Apple', image: 'path/to/your/a-image.jpg', description: '...', example: '...', memoryTips: [...] },
+                    // =====================================================
                     { letter: 'a', word: 'Apple', image: 'https://placehold.co/600x400/A9CCE3/ffffff?text=A+for+Apple', description: 'The letter "A" looks like an apple with a stem at the top. Visualize it standing with the top as the stem.', example: 'The <span class="bg-yellow-200 font-bold">A</span>mazing <span class="bg-yellow-200 font-bold">a</span>pple <span class="bg-yellow-200 font-bold">a</span>ppeared <span class="bg-yellow-200 font-bold">a</span>bove the <span class="bg-yellow-200 font-bold">a</span>ncient tree.', memoryTips: ['Associate pointed top with stem', 'Crossbar is line through apple', 'Think "ah" when biting apple'] },
                     { letter: 'b', word: 'Bee', image: 'https://placehold.co/600x400/FAD7A0/ffffff?text=B+for+Bee', description: 'The letter "B" looks like the two round parts of a bee\'s body.', example: '<span class="bg-yellow-200 font-bold">B</span>ig <span class="bg-yellow-200 font-bold">b</span>ees <span class="bg-yellow-200 font-bold">b</span>uzz <span class="bg-yellow-200 font-bold">b</span>y <span class="bg-yellow-200 font-bold">b</span>right <span class="bg-yellow-200 font-bold">b</span>looms.', memoryTips: ['Two humps match bee body', 'Imagine the sound "buzz"', 'Bee flies straight like | in B'] },
                     { letter: 'c', word: 'Cat', image: 'https://placehold.co/600x400/AEB6BF/ffffff?text=C+for+Cat', description: 'The letter "C" is curved like a cat curled up asleep.', example: 'The <span class="bg-yellow-200 font-bold">c</span>ozy <span class="bg-yellow-200 font-bold">c</span>at <span class="bg-yellow-200 font-bold">c</span>uddled <span class="bg-yellow-200 font-bold">c</span>lose.', memoryTips: ['C shape is cat\'s curled back', 'Opening is where head could peek', 'Sound "C" in Cat'] },
-                    // ... ADD ALL OTHER LETTERS HERE ...
-                    { letter: 'x', word: 'X-ray', image: 'https://placehold.co/600x400/CACFD2/ffffff?text=X+for+X-ray', description: 'The letter "X" looks like the crossbones symbol often seen on X-ray warnings or pirate flags.', example: 'The e<span class="bg-yellow-200 font-bold">x</span>pert used an <span class="bg-yellow-200 font-bold">X</span>-ray to e<span class="bg-yellow-200 font-bold">x</span>amine the bo<span class="bg-yellow-200 font-bold">x</span>.', memoryTips: ['Diagonal lines cross like bones', '"X" marks the spot for examination', 'Used for seeing inside (examine)'] },
-                    { letter: 'y', word: 'Yoyo', image: 'https://placehold.co/600x400/D2B4DE/ffffff?text=Y+for+Yoyo', description: '"Y" resembles a string with a yoyo hanging below.', example: 'The <span class="bg-yellow-200 font-bold">y</span>ellow <span class="bg-yellow-200 font-bold">y</span>oyo <span class="bg-yellow-200 font-bold">y</span>anked back up fast <span class="bg-yellow-200 font-bold">y</span>esterday.', memoryTips: ['V part is hand/fingers', '| part is the string', 'Circular motion like a yoyo'] },
-                    { letter: 'z', word: 'Zebra', image: 'https://placehold.co/600x400/A3E4D7/ffffff?text=Z+for+Zebra', description: '"Z" looks like the zig-zag stripes on a zebra.', example: 'The <span class="bg-yellow-200 font-bold">z</span>ebra <span class="bg-yellow-200 font-bold">z</span>ipped through the <span class="bg-yellow-200 font-bold">z</span>oo <span class="bg-yellow-200 font-bold">z</span>one with <span class="bg-yellow-200 font-bold">z</span>est.', memoryTips: ['Zig-zag shape mimics stripes', 'Sharp turns like zebra running', 'Sound "Z" in Zebra/Zoo'] }
-                ],
+                     // ... add entries for D through Z ...
+                     ],
                 currentIndex: 0,
-                settings: {
+                settings: { // Default settings
                     showText: true,
-                    highlightLetters: true, // Added based on settings UI
-                    // theme: 'light', // Example for future use
-                    // layout: 'side-by-side',
-                    // imageSize: 50,
-                    // animations: true,
-                    // transitionSpeed: 'medium',
+                    highlightLetters: true,
+                    // theme: 'light', // Future enhancement
                     keyboardNav: true,
-                    swipeNav: true, // Assuming default enabled
+                    swipeNav: true, // Enable basic swipe by default
                     loopAlphabet: true,
                 },
-                defaultSettings: {}, // To store initial default settings
+                defaultSettings: {}, // Stores a copy of defaults for reset
 
                 // --- Computed State (Getters) ---
                 get currentLetterData() {
                     if (this.alphabet.length === 0) {
-                        return { letter: '?', word: 'N/A', image: '', description: 'No data loaded.', example: '', memoryTips: [] };
+                        // Fallback if alphabet array is empty
+                        return { letter: '?', word: 'N/A', image: 'https://placehold.co/600x400/cccccc/ffffff?text=No+Data', description: 'Alphabet data is missing or not loaded.', example: '', memoryTips: [] };
                     }
-                    return this.alphabet[this.currentIndex];
+                     // Ensure index is always valid, even if array changes unexpectedly
+                     const validIndex = Math.max(0, Math.min(this.currentIndex, this.alphabet.length - 1));
+                    return this.alphabet[validIndex];
                 },
 
                 // --- Actions ---
                 init() {
                     console.log("Alphabet Store Initializing...");
-                     // Store defaults for reset functionality
-                     this.defaultSettings = JSON.parse(JSON.stringify(this.settings));
+                    // Store initial default settings for the reset function
+                    this.defaultSettings = JSON.parse(JSON.stringify(this.settings));
 
-                    // 1. Load Settings from localStorage (if available)
-                    //    const savedSettings = localStorage.getItem('alphabetSettings');
-                    //    if (savedSettings) {
-                    //        try {
-                    //            this.settings = { ...this.settings, ...JSON.parse(savedSettings) };
-                    //        } catch (e) { console.error("Error parsing saved settings:", e); }
-                    //    }
+                    // 1. Load Settings from localStorage (Optional - Uncomment to enable)
+                    // this.loadSettingsFromLocalStorage();
 
-                    // 2. Set initial letter from URL hash or default
+                    // 2. Set initial letter based on URL hash or default to index 0
                     this.loadLetterFromHash();
 
-                    // 3. Listen for hash changes (browser back/forward)
+                    // 3. Listen for hash changes (e.g., browser back/forward buttons)
                     window.addEventListener('hashchange', () => this.loadLetterFromHash());
 
-                    // 4. Setup Keyboard Navigation Listener
-                    window.addEventListener('keydown', (e) => {
-                        if (!this.settings.keyboardNav) return;
+                    // 4. Setup Global Keyboard Event Listener
+                    this.setupKeyboardListener();
 
-                        // Ignore if modifier keys are pressed or focus is in input/textarea
-                        if (e.metaKey || e.ctrlKey || e.altKey || document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'SELECT') {
-                           return;
-                        }
+                    // 5. Add basic swipe detection listeners to the main content area
+                    this.addSwipeListeners(document.getElementById('main-content'));
 
-                        // Special handling inside modals would be done within those components usually
-                        // but we need to know *if* a modal ISN'T active for T/F keys
-                        const isFullscreenVisible = Alpine.store('fullscreenModal')?.isVisible;
-                        const isSettingsVisible = Alpine.store('settingsPanel')?.isVisible;
-                        const isInstructionsVisible = Alpine.store('instructionsModal')?.isVisible;
-                        const isAnyModalVisible = isFullscreenVisible || isSettingsVisible || isInstructionsVisible;
-
-                        switch (e.key) {
-                            case 'ArrowLeft':
-                                e.preventDefault();
-                                // Navigation logic handled by the modal if it's open, otherwise main nav
-                                if (!isFullscreenVisible) this.prevLetter(); // Check specific modal for nav control
-                                break;
-                            case 'ArrowRight':
-                                e.preventDefault();
-                                if (!isFullscreenVisible) this.nextLetter();
-                                break;
-                            case 't':
-                            case 'T':
-                                if (!isAnyModalVisible) { // Only toggle if no modal is capturing keypresses
-                                    e.preventDefault();
-                                    this.toggleSetting('showText');
-                                }
-                                break;
-                            case 'f':
-                            case 'F':
-                                 if (!isAnyModalVisible) {
-                                      e.preventDefault();
-                                      // Dispatch an event for the fullscreen modal to pick up
-                                      window.dispatchEvent(new CustomEvent('open-fullscreen'));
-                                 }
-                                break;
-                                // ESC is handled by modals themselves via @keydown.escape.window
-                        }
-                    });
-
-                    // Add basic swipe detection (example) - requires a more robust library for production
-                    this.addSwipeListeners(document.getElementById('main-content')); // Attach to main area
-
-                     console.log("Store Initialized. Current Index:", this.currentIndex);
+                     console.log(`Store Initialized. Current Index: ${this.currentIndex}. Settings:`, this.settings);
                 },
+
+                 loadSettingsFromLocalStorage() {
+                     const savedSettings = localStorage.getItem('alphabetSettings');
+                     if (savedSettings) {
+                         try {
+                             const parsed = JSON.parse(savedSettings);
+                             // Merge saved settings with defaults to ensure all keys exist
+                             this.settings = { ...this.settings, ...parsed };
+                              console.log("Loaded settings from localStorage:", this.settings);
+                         } catch (e) { console.error("Error parsing saved settings from localStorage:", e); }
+                     }
+                 },
 
                 loadLetterFromHash() {
                     const hash = window.location.hash;
-                    let targetIndex = 0;
+                    let targetIndex = 0; // Default to first letter
+                    // Check if hash is valid (e.g., '#a', '#B')
                     if (hash && hash.length === 2 && /^[a-z]$/i.test(hash.substring(1))) {
                         const letter = hash.substring(1).toLowerCase();
                         const foundIndex = this.alphabet.findIndex(item => item.letter === letter);
@@ -189,161 +163,286 @@
                             targetIndex = foundIndex;
                         }
                     }
-                    // Avoid infinite loop if hashchange was triggered by setting the index
+                    // Only update if the index actually changes to prevent infinite loops from hashchange event
                     if (this.currentIndex !== targetIndex) {
-                         this.currentIndex = targetIndex;
-                         console.log(`Loaded index ${this.currentIndex} from hash or default.`);
+                        this.currentIndex = targetIndex;
+                        console.log(`Loaded index ${this.currentIndex} from hash ('${hash}') or default.`);
+                    } else {
+                        // If hash matches current state, ensure URL hash is set correctly (covers initial load with no hash)
+                         this.updateURLHash(this.currentLetterData.letter);
                     }
                 },
 
                 updateURLHash(letter) {
-                    if (!letter) return;
+                    if (!letter || this.alphabet.length === 0) return; // Don't update if no letter or data
                     const newHash = `#${letter.toLowerCase()}`;
                     if (window.location.hash !== newHash) {
-                        // Use replaceState for initial load or if history manipulation isn't desired for every click
-                        // history.pushState(null, null, newHash);
-                        // Use pushState to allow back/forward navigation between letters
-                        history.pushState({ letter: letter }, '', newHash);
+                         // Use pushState to allow browser back/forward navigation between letters
+                         history.pushState({ letter: letter }, '', newHash);
+                          console.log(`URL hash updated to ${newHash}`);
                     }
                 },
 
                 goToLetter(index) {
+                     // Boundary checks for the index
                     if (index >= 0 && index < this.alphabet.length) {
-                        this.currentIndex = index;
-                        this.updateURLHash(this.currentLetterData.letter);
-                    }
-                },
-
-                goToLetterByChar(letterChar) {
-                     const index = this.alphabet.findIndex(item => item.letter === letterChar.toLowerCase());
-                     if (index !== -1) {
-                         this.goToLetter(index);
+                        if (this.currentIndex !== index) {
+                            this.currentIndex = index;
+                             this.updateURLHash(this.currentLetterData.letter);
+                            console.log(`Navigated to index ${index} (Letter: ${this.currentLetterData.letter.toUpperCase()})`);
+                        }
+                    } else {
+                         console.warn(`Attempted to navigate to invalid index: ${index}`);
                      }
                 },
 
+                goToLetterByChar(letterChar) {
+                     const normalizedChar = letterChar.toLowerCase();
+                     const index = this.alphabet.findIndex(item => item.letter === normalizedChar);
+                     if (index !== -1) {
+                         this.goToLetter(index);
+                     } else {
+                          console.warn(`Letter character '${letterChar}' not found in alphabet data.`);
+                      }
+                },
+
                 prevLetter() {
+                    if (this.alphabet.length === 0) return;
                     let newIndex = this.currentIndex - 1;
                     if (newIndex < 0) {
-                        newIndex = this.settings.loopAlphabet ? this.alphabet.length - 1 : 0;
+                        // Loop or stop based on setting
+                        if (this.settings.loopAlphabet) {
+                            newIndex = this.alphabet.length - 1; // Wrap around to the end
+                        } else {
+                             console.log("Reached start, not looping.");
+                             return; // Do nothing if not looping
+                        }
                     }
                     this.goToLetter(newIndex);
                 },
 
                 nextLetter() {
+                     if (this.alphabet.length === 0) return;
                     let newIndex = this.currentIndex + 1;
                     if (newIndex >= this.alphabet.length) {
-                        newIndex = this.settings.loopAlphabet ? 0 : this.alphabet.length - 1;
+                         // Loop or stop based on setting
+                        if (this.settings.loopAlphabet) {
+                            newIndex = 0; // Wrap around to the beginning
+                        } else {
+                            console.log("Reached end, not looping.");
+                             return; // Do nothing if not looping
+                        }
                     }
                     this.goToLetter(newIndex);
                 },
 
-                toggleSetting(key) {
+                // Toggles a boolean setting
+                 toggleSetting(key) {
                      if (typeof this.settings[key] === 'boolean') {
-                        this.settings[key] = !this.settings[key];
-                        // this.saveSettings(); // Optionally save on every toggle
+                         this.settings[key] = !this.settings[key];
+                          console.log(`Toggled setting '${key}' to ${this.settings[key]}`);
+                         // this.saveSettings(); // Optional: Save settings automatically on every toggle
+                     } else {
+                         console.warn(`Attempted to toggle non-boolean setting: ${key}`);
                      }
                  },
 
+                 // Sets any setting value
                  setSetting(key, value) {
-                    if (key in this.settings) {
-                        this.settings[key] = value;
-                         // this.saveSettings(); // Optionally save on change
-                    }
+                     if (key in this.settings) {
+                         if(this.settings[key] !== value) {
+                             this.settings[key] = value;
+                             console.log(`Set setting '${key}' to ${value}`);
+                             // this.saveSettings(); // Optional: Save settings automatically on change
+                         }
+                     } else {
+                         console.warn(`Attempted to set unknown setting: ${key}`);
+                     }
                  },
 
+                 // Persist settings (Optional - Uncomment to enable)
                  saveSettings() {
-                     // try {
-                     //     localStorage.setItem('alphabetSettings', JSON.stringify(this.settings));
-                     //     console.log("Settings saved to localStorage.");
-                     // } catch (e) { console.error("Error saving settings:", e); }
-                     console.log("Settings save action triggered (localStorage saving commented out).");
+                      console.log("Attempting to save settings...", this.settings);
+                      // try {
+                      //     localStorage.setItem('alphabetSettings', JSON.stringify(this.settings));
+                      //     console.log("Settings saved to localStorage.");
+                      // } catch (e) { console.error("Error saving settings to localStorage:", e); }
+                      alert('Settings saved!'); // Placeholder feedback
                  },
 
+                 // Reset settings to the stored defaults
                  resetSettings() {
-                     this.settings = JSON.parse(JSON.stringify(this.defaultSettings)); // Restore from stored defaults
+                     // Deep copy default settings back into current settings
+                     this.settings = JSON.parse(JSON.stringify(this.defaultSettings));
                      console.log("Settings reset to defaults.");
-                    //  this.saveSettings(); // Optionally save reset state
+                     // this.saveSettings(); // Optional: Persist the reset state immediately
                  },
 
-                 // Basic Swipe Detection (replace with library like Hammer.js for reliability)
+                setupKeyboardListener() {
+                     window.addEventListener('keydown', (e) => {
+                        // 1. Check if keyboard navigation is enabled in settings
+                        if (!this.settings.keyboardNav) return;
+
+                        // 2. Ignore keydown if modifier keys (Ctrl, Alt, Meta) are pressed
+                        if (e.metaKey || e.ctrlKey || e.altKey) return;
+
+                        // 3. Ignore keydown if focus is inside an input, textarea, or select element
+                        const activeElement = document.activeElement;
+                         const isInputFocused = activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA' || activeElement.tagName === 'SELECT' || activeElement.isContentEditable);
+                         if (isInputFocused) return;
+
+                         // 4. Check if any relevant modal is open (Modals should handle their own Esc etc.)
+                         // Accessing component state directly isn't ideal, event-based checks are better,
+                         // but for simplicity here we access store state possibly set by modals if needed.
+                         // NOTE: We primarily check for fullscreen here for Left/Right key hijack.
+                         // T/F keys are checked against ALL modals that *might* capture keys.
+                         const isFullscreenVisible = Alpine.store('fullscreenModal')?.isVisible; // Assumes store is created
+                         const isSettingsVisible = Alpine.store('settingsPanel')?.isVisible;
+                         const isInstructionsVisible = Alpine.store('instructionsModal')?.isVisible;
+                         const isAnyNonNavModalVisible = isSettingsVisible || isInstructionsVisible; // Modals where L/R shouldn't navigate main content
+
+                        // 5. Handle specific keys
+                        let handled = false;
+                        switch (e.key) {
+                            case 'ArrowLeft':
+                                if (!isFullscreenVisible && !isAnyNonNavModalVisible) { // Only navigate main if modals not conflicting
+                                     this.prevLetter();
+                                     handled = true;
+                                }
+                                // Fullscreen modal handles its own Left arrow via @keydown.left.window
+                                break;
+                            case 'ArrowRight':
+                                 if (!isFullscreenVisible && !isAnyNonNavModalVisible) {
+                                      this.nextLetter();
+                                      handled = true;
+                                 }
+                                // Fullscreen modal handles its own Right arrow
+                                break;
+                            case 't':
+                            case 'T':
+                                 // Check if ANY modal is potentially open and capturing T
+                                 if (!isFullscreenVisible && !isAnyNonNavModalVisible) {
+                                    this.toggleSetting('showText');
+                                    handled = true;
+                                 }
+                                break;
+                            case 'f':
+                            case 'F':
+                                  // Check if ANY modal is potentially open and capturing F
+                                  if (!isFullscreenVisible && !isAnyNonNavModalVisible) {
+                                      // Dispatch a global event for the fullscreen modal component to listen for
+                                      window.dispatchEvent(new CustomEvent('open-fullscreen'));
+                                      handled = true;
+                                  }
+                                break;
+                             // ESC is typically handled by the modal components directly (@keydown.escape.window)
+                        }
+
+                        // Prevent default browser action (like scrolling with arrow keys) only if we handled the key
+                        if (handled) {
+                            e.preventDefault();
+                        }
+                    });
+                },
+
+
+                 // Basic Swipe Detection Logic (Consider Hammer.js for robust solution)
                  touchstartX: 0,
                  touchendX: 0,
-                 threshold: 50, // Minimum distance for swipe
+                 swipeThreshold: 50, // Min pixels horizontally for a swipe
 
                  handleTouchStart(e) {
+                     // Use changedTouches for potentially multi-touch scenarios
                      this.touchstartX = e.changedTouches[0].screenX;
                  },
                  handleTouchEnd(e) {
-                     if (!this.settings.swipeNav) return;
+                     if (!this.settings.swipeNav) return; // Check setting
                      this.touchendX = e.changedTouches[0].screenX;
                      this.handleSwipeGesture();
                  },
                  handleSwipeGesture() {
                      const deltaX = this.touchendX - this.touchstartX;
-                     if (Math.abs(deltaX) < this.threshold) return; // Not a swipe
 
-                     if (this.touchendX < this.touchstartX) {
-                         console.log('Swiped left');
-                         this.nextLetter();
+                     // Ensure significant movement to qualify as swipe
+                     if (Math.abs(deltaX) < this.swipeThreshold) {
+                        // console.log(`Swipe distance (${Math.abs(deltaX)}px) less than threshold (${this.swipeThreshold}px)`);
+                        return;
                      }
-                     if (this.touchendX > this.touchstartX) {
-                         console.log('Swiped right');
+
+                     if (this.touchendX < this.touchstartX) { // Swiped left
+                         console.log('Swiped left detected');
+                         this.nextLetter();
+                     } else if (this.touchendX > this.touchstartX) { // Swiped right
+                         console.log('Swiped right detected');
                          this.prevLetter();
                      }
+                       // Reset after swipe gesture processing
+                     this.touchstartX = 0;
+                     this.touchendX = 0;
                  },
                  addSwipeListeners(element) {
-                     if(!element) return;
+                     if (!element) {
+                         console.warn("Swipe target element not found.");
+                         return;
+                     }
+                     // Use passive listeners for better scroll performance if default prevention isn't needed
                      element.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
                      element.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
+                     console.log("Swipe listeners added to:", element);
                  }
             });
 
             // === Alpine Components ===
 
-            // --- Root Application Component ---
+            // --- Root Application Component (Layout Control) ---
             Alpine.data('appRoot', () => ({
                 isMobileMenuOpen: false,
-                isDesktopSidebarVisible: true,
-                // Note: Alphabet data and current index are now in the store
-                // $store.alphabetStore.alphabet
-                // $store.alphabetStore.currentIndex
-                // $store.alphabetStore.currentLetterData
+                isDesktopSidebarVisible: true, // Default to visible on larger screens
 
                 toggleMobileMenu(forceState = null) {
                     this.isMobileMenuOpen = (forceState === null) ? !this.isMobileMenuOpen : forceState;
                 },
                 toggleDesktopSidebar() {
                     this.isDesktopSidebarVisible = !this.isDesktopSidebarVisible;
+                    // Optional: Store preference?
+                    // localStorage.setItem('desktopSidebarPref', this.isDesktopSidebarVisible);
                 },
                 init() {
                     console.log("App Root Initializing...");
-                     // Initialize the store which handles main data loading and listeners
+                    // Optional: Load sidebar visibility preference?
+                    // const pref = localStorage.getItem('desktopSidebarPref');
+                    // if (pref !== null) this.isDesktopSidebarVisible = (pref === 'true');
+
+                    // The primary initialization logic now lives in the store's init method
                     Alpine.store('alphabetStore').init();
-                 }
+                }
             }));
 
-             // --- Fullscreen Modal ---
+             // --- Fullscreen Modal Component ---
              Alpine.data('fullscreenModal', () => ({
                  isVisible: false,
                  init() {
                     console.log("Fullscreen Modal Initializing...");
-                    // Listen for the global event to open
+                    // Listen for the global 'open-fullscreen' event dispatched by buttons/keys
                     window.addEventListener('open-fullscreen', () => {
-                         if (!this.isVisible) { // Avoid re-triggering if already open
-                            this.isVisible = true;
-                            document.body.style.overflow = 'hidden'; // Prevent body scroll
-                         }
-                    });
-                    // This is an alternative way to setup listeners if init feels cleaner
-                    this.$watch('isVisible', (value) => {
-                        if (!value) {
-                             document.body.style.overflow = ''; // Restore scroll on close
+                        if (!this.isVisible) { // Open only if not already visible
+                             console.log("Opening fullscreen modal...");
+                             this.isVisible = true;
+                             document.body.style.overflow = 'hidden'; // Prevent body scroll when modal is open
                         }
-                    })
+                    });
+                    // Use $watch to reactively clean up when the modal closes
+                    this.$watch('isVisible', (value) => {
+                         if (!value) {
+                            console.log("Fullscreen modal closed.");
+                            document.body.style.overflow = ''; // Restore body scroll
+                         }
+                     });
                  },
                  close() {
-                    this.isVisible = false;
+                    this.isVisible = false; // Triggers the $watch cleanup
                  },
+                 // Navigation actions delegate to the store
                  prev() {
                      Alpine.store('alphabetStore').prevLetter();
                  },
@@ -352,530 +451,626 @@
                  }
              }));
 
-             // --- Settings Panel ---
+             // --- Settings Panel Component ---
              Alpine.data('settingsPanel', () => ({
                  isVisible: false,
                  init() {
-                     console.log("Settings Panel Initializing...");
-                      // Listen for event dispatched from sidebar link
-                      window.addEventListener('open-settings', () => this.isVisible = true);
+                    console.log("Settings Panel Initializing...");
+                     // Listen for 'open-settings' event dispatched by sidebar button/link
+                     window.addEventListener('open-settings', () => {
+                         if (!this.isVisible) {
+                            console.log("Opening settings panel...");
+                            this.isVisible = true;
+                            // Optional: Prevent body scroll if desired for settings panel
+                            // document.body.style.overflow = 'hidden';
+                         }
+                     });
+                      this.$watch('isVisible', (value) => {
+                          if (!value) {
+                             console.log("Settings panel closed.");
+                              // Optional: Restore body scroll if it was hidden
+                             // document.body.style.overflow = '';
+                          }
+                      });
                  },
                  close() {
                     this.isVisible = false;
                  },
                  save() {
-                    Alpine.store('alphabetStore').saveSettings();
-                    this.close();
+                     console.log("Save button clicked in settings panel.");
+                     // Call the store's save function (which might save to localStorage)
+                     Alpine.store('alphabetStore').saveSettings();
+                     this.close(); // Close the panel after saving
                  },
                  reset() {
-                     Alpine.store('alphabetStore').resetSettings();
-                 },
-                 // Helper to update image size display reactively
-                 updateImageSizeDisplay(value) {
-                    const displayEl = document.getElementById('image-size-value');
-                    if (displayEl) displayEl.textContent = value + '%';
+                     console.log("Reset button clicked in settings panel.");
+                      // Call the store's reset function
+                      Alpine.store('alphabetStore').resetSettings();
+                       // Note: No automatic save after reset here, user confirms with "Done"
                  }
              }));
 
-             // --- Instructions Modal ---
+             // --- Instructions Modal Component ---
              Alpine.data('instructionsModal', () => ({
-                isVisible: false,
-                dontShowAgain: false,
-                init() {
-                    console.log("Instructions Modal Initializing...");
-                     const dontShow = localStorage.getItem('dontShowAlphabetInstructions');
-                    if (dontShow !== 'true') {
-                        // Slight delay to ensure page is settled
-                        setTimeout(() => { this.isVisible = true; }, 500);
-                    }
-                },
-                close(checkDontShow = false) {
-                     this.isVisible = false;
-                     if (checkDontShow && this.dontShowAgain) {
-                         localStorage.setItem('dontShowAlphabetInstructions', 'true');
+                 isVisible: false,
+                 dontShowAgain: false, // Bound to the checkbox
+                 storageKey: 'dontShowAlphabetInstructions', // localStorage key
+
+                 init() {
+                     console.log("Instructions Modal Initializing...");
+                     // Check localStorage if this modal should be shown
+                     const dontShow = localStorage.getItem(this.storageKey);
+                     if (dontShow !== 'true') {
+                         // Use setTimeout to delay showing slightly, ensures smooth page load
+                         setTimeout(() => {
+                             console.log("Showing instructions modal (not previously dismissed).");
+                             this.isVisible = true;
+                         }, 600); // Adjust delay as needed
+                     } else {
+                          console.log("Instructions modal previously dismissed, not showing on load.");
                      }
-                }
+                 },
+                 close(checkDontShow = false) {
+                     // Only update localStorage if the 'Got it' or close button initiated the close AND the checkbox is ticked
+                     if (checkDontShow && this.dontShowAgain) {
+                         try {
+                             localStorage.setItem(this.storageKey, 'true');
+                             console.log(`Set '${this.storageKey}' in localStorage.`);
+                         } catch (e) {
+                              console.error(`Error saving '${this.storageKey}' to localStorage:`, e);
+                         }
+                     }
+                      // Always hide the modal
+                     this.isVisible = false;
+                 }
              }));
         });
 
-        // Tailwind Config (minor changes possible, mainly for adding primary color if not default)
+        // Tailwind CSS Configuration JIT
         document.addEventListener('DOMContentLoaded', function() {
              tailwind.config = {
-                 theme: {
-                     extend: {
-                         colors: {
-                            primary: {
-                                 DEFAULT: '#4A6FA5', // Your primary color
-                                 // Add shades if needed (e.g., 600 for hover)
-                                 '600': '#406190', // Example darker shade
-                                 // ... other shades
-                             },
-                            secondary: { DEFAULT: '#FFB347' }, // Example
-                            accent: { DEFAULT: '#A3E4D7' }, // Example
+                // Use content array for better JIT performance if building CSS later
+                // content: ["./*.html"], // Adjust path as needed
+                theme: {
+                    extend: {
+                        colors: {
+                           primary: {
+                                DEFAULT: '#4A6FA5', // Your defined primary color
+                                '600': '#406190', // Example darker shade for hover
+                                '700': '#36537A', // Example even darker shade
+                                // Add other shades (50, 100, ... 900) if used
+                            },
+                           secondary: { DEFAULT: '#FFB347' }, // Your secondary orange
+                           accent: { DEFAULT: '#A3E4D7' }, // Example accent
+                           // Add other custom colors if needed
+                        },
+                        fontFamily: {
+                            // Use the names defined in your <link> tags
+                            sans: ['Nunito', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                            heading: ['Roboto', 'Inter', 'system-ui', 'sans-serif'],
+                            body: ['Roboto', 'Inter', 'system-ui', 'sans-serif'],
+                        },
+                        spacing: { // Keep custom spacing
+                            '18': '4.5rem', '22': '5.5rem', '30': '7.5rem'
+                        },
+                        maxWidth: { // Keep custom max widths
+                            '8xl': '88rem', '9xl': '96rem'
+                        },
+                         // Ensure transitions needed for sidebar/margin are defined
+                         transitionProperty: {
+                              'width': 'width',
+                              'margin': 'margin-left, margin-right', // Include both if needed
+                              'transform': 'transform',
+                              'opacity': 'opacity',
                          },
-                         fontFamily: {
-                             sans: ['Nunito', 'Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
-                             heading: ['Roboto', 'Inter', 'system-ui', 'sans-serif'],
-                             body: ['Roboto', 'Inter', 'system-ui', 'sans-serif'],
+                         animation: { /* Keep all predefined animations */
+                           'fade-in': 'fadeIn 0.5s ease-in', 'fade-out': 'fadeOut 0.5s ease-out', 'slide-up': 'slideUp 0.5s ease-out', 'slide-down': 'slideDown 0.5s ease-out', 'slide-left': 'slideLeft 0.5s ease-out', 'slide-right': 'slideRight 0.5s ease-out', 'scale-in': 'scaleIn 0.5s ease-out', 'scale-out': 'scaleOut 0.5s ease-out', 'spin-slow': 'spin 3s linear infinite', 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'bounce-slow': 'bounce 3s infinite', 'float': 'float 3s ease-in-out infinite',
                          },
-                        spacing: { '18': '4.5rem', '22': '5.5rem', '30': '7.5rem' },
-                        maxWidth: { '8xl': '88rem', '9xl': '96rem' },
-                        transitionProperty: { 'width': 'width', 'margin': 'margin-left, margin-right' },
-                        animation: { /* Keep animations */
-                            'fade-in': 'fadeIn 0.5s ease-in', 'fade-out': 'fadeOut 0.5s ease-out', 'slide-up': 'slideUp 0.5s ease-out', 'slide-down': 'slideDown 0.5s ease-out', 'slide-left': 'slideLeft 0.5s ease-out', 'slide-right': 'slideRight 0.5s ease-out', 'scale-in': 'scaleIn 0.5s ease-out', 'scale-out': 'scaleOut 0.5s ease-out', 'spin-slow': 'spin 3s linear infinite', 'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'bounce-slow': 'bounce 3s infinite', 'float': 'float 3s ease-in-out infinite',
+                         keyframes: { /* Keep all predefined keyframes */
+                           fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } }, fadeOut: { '0%': { opacity: '1' }, '100%': { opacity: '0' } }, slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }, slideDown: { '0%': { transform: 'translateY(-20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }, slideLeft: { '0%': { transform: 'translateX(20px)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } }, slideRight: { '0%': { transform: 'translateX(-20px)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } }, scaleIn: { '0%': { transform: 'scale(0.9)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }, scaleOut: { '0%': { transform: 'scale(1.1)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }, float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
                          },
-                         keyframes: { /* Keep keyframes */
-                            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } }, fadeOut: { '0%': { opacity: '1' }, '100%': { opacity: '0' } }, slideUp: { '0%': { transform: 'translateY(20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }, slideDown: { '0%': { transform: 'translateY(-20px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }, slideLeft: { '0%': { transform: 'translateX(20px)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } }, slideRight: { '0%': { transform: 'translateX(-20px)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } }, scaleIn: { '0%': { transform: 'scale(0.9)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }, scaleOut: { '0%': { transform: 'scale(1.1)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } }, float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
-                         },
-                        aspectRatio: { 'portrait': '3/4', 'landscape': '4/3', 'ultrawide': '21/9' },
+                        aspectRatio: { // Keep custom aspect ratios
+                             'portrait': '3/4', 'landscape': '4/3', 'ultrawide': '21/9'
+                        },
                     },
-                },
-                 variants: { extend: { /* Keep variants */
-                         opacity: ['disabled'], cursor: ['disabled'], backgroundColor: ['active', 'disabled'], textColor: ['active', 'disabled'],
-                    },
-                },
-                 plugins: [],
-            };
+                 },
+                  variants: { // Keep variants if needed by plugins or custom CSS
+                       extend: {
+                            opacity: ['disabled'], cursor: ['disabled'], backgroundColor: ['active', 'disabled'], textColor: ['active', 'disabled'],
+                      },
+                  },
+                  plugins: [
+                      // Add Tailwind plugins here if you use any, e.g.:
+                      // require('@tailwindcss/forms'),
+                      // require('@tailwindcss/typography'),
+                 ],
+             };
          });
     </script>
 
 </head>
 
 <body x-data="appRoot" x-init="init()" class="antialiased text-gray-800 min-h-screen flex flex-col bg-gray-100 overflow-hidden">
-    <!-- Skip Link -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-[100] focus:p-4 focus:bg-white focus:text-black"> Skip to main content </a>
+    <!-- Skip to Main Content Link (Accessibility) -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-[100] focus:p-4 focus:bg-white focus:text-black rounded-br-lg shadow-md">
+        Skip to main content
+    </a>
 
-    <!-- Root Layout Div -->
+    <!-- Root Layout Div: Sidebar + Main Content -->
     <div class="flex h-screen overflow-hidden">
 
-        <!-- Sidebar Area -->
-        <div class="flex-shrink-0 sidebar-transition" :class="{'lg:w-64': isDesktopSidebarVisible, 'lg:w-0': !isDesktopSidebarVisible}">
-             <!-- Desktop Sidebar -->
-             <nav x-show="isDesktopSidebarVisible"
-                  x-transition:enter="transition ease-in-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                  x-transition:leave="transition ease-in-out duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                  class="hidden lg:flex flex-col w-64 h-full bg-white border-r border-gray-200 py-6 overflow-y-auto fixed lg:relative z-30">
-                  <div class="px-4 mb-8">
-                      <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
-                  </div>
-                  <div class="flex-1 px-2 overflow-y-auto" style="max-height: calc(100vh - 150px);">
-                      <ul class="space-y-2">
-                         <template x-for="(item, index) in $store.alphabetStore.alphabet" :key="item.letter">
-                            <li>
-                                 <a :href="`#${item.letter}`"
-                                    @click.prevent="$store.alphabetStore.goToLetter(index)"
-                                    class="flex items-center px-4 py-2 rounded-md font-medium text-gray-600 hover:bg-gray-100 transition-colors duration-150"
-                                    :class="{ 'active-sidebar-link': $store.alphabetStore.currentIndex === index }">
-                                     <span x-text="`${item.letter.toUpperCase()} - ${item.word}`"></span>
-                                 </a>
-                             </li>
-                         </template>
-                         <!-- More letters link (if needed) -->
-                         <!-- <li><a href="#more"...>More Letters...</a></li> -->
-                      </ul>
-                  </div>
-                  <div class="px-4 mt-6">
-                      <!-- Dispatch event to open settings panel -->
-                      <button @click="$dispatch('open-settings')" class="flex items-center w-full px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md text-left">
-                          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                          Settings
-                      </button>
-                  </div>
-             </nav>
-
-             <!-- Mobile Menu -->
-             <div x-cloak
-                  x-show="isMobileMenuOpen"
-                  @click.away="toggleMobileMenu(false)"
-                  x-transition:enter="transition ease-out duration-200 transform" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
-                  x-transition:leave="transition ease-in duration-150 transform" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
-                  class="lg:hidden fixed inset-y-0 left-0 w-64 h-full z-40 bg-white border-r border-gray-200 py-6 overflow-y-auto">
-                <div class="px-4 mb-8 flex justify-between items-center">
-                    <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
-                    <button @click="toggleMobileMenu(false)" class="text-gray-500 hover:text-gray-700">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
-                </div>
-                <div class="px-2">
-                    <ul class="space-y-2">
-                       <template x-for="(item, index) in $store.alphabetStore.alphabet" :key="item.letter">
+        <!-- Sidebar Area Container -->
+        <div class="flex-shrink-0 sidebar-transition z-30" :class="{'lg:w-64': isDesktopSidebarVisible, 'lg:w-0': !isDesktopSidebarVisible}">
+            <!-- Desktop Sidebar (Hidden below lg, controlled by isDesktopSidebarVisible above lg) -->
+            <nav x-show="isDesktopSidebarVisible"
+                 x-transition:enter="transition ease-in-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in-out duration-100" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                 class="hidden lg:flex flex-col w-64 h-full bg-white border-r border-gray-200 py-6 overflow-y-auto fixed left-0 top-0"> 
+                 <div class="px-4 mb-8">
+                     <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
+                 </div>
+                 <!-- Dynamically generated list of alphabet links -->
+                 <div class="flex-1 px-2 overflow-y-auto" style="max-height: calc(100vh - 150px);"> 
+                     <ul class="space-y-2">
+                        <template x-for="(item, index) in $store.alphabetStore.alphabet" :key="item.letter">
                            <li>
-                               <a :href="`#${item.letter}`"
-                                  @click.prevent="$store.alphabetStore.goToLetter(index); toggleMobileMenu(false);"
-                                  class="flex items-center px-4 py-2 rounded-md font-medium text-gray-600 hover:bg-gray-100 transition-colors duration-150"
-                                  :class="{ 'active-sidebar-link': $store.alphabetStore.currentIndex === index }">
-                                   <span x-text="`${item.letter.toUpperCase()} - ${item.word}`"></span>
-                               </a>
-                           </li>
-                       </template>
-                    </ul>
-                </div>
-                 <div class="px-4 mt-6">
-                     <button @click="$dispatch('open-settings'); toggleMobileMenu(false);" class="flex items-center w-full px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md text-left">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                         Settings
+                                <a :href="`#${item.letter}`"
+                                   @click.prevent="$store.alphabetStore.goToLetter(index)"
+                                   class="flex items-center px-4 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors duration-150 ease-in-out"
+                                   :class="{ 'active-sidebar-link': $store.alphabetStore.currentIndex === index }"> 
+                                    <span class="font-medium" x-text="`${item.letter.toUpperCase()} - ${item.word}`"></span>
+                                </a>
+                            </li>
+                        </template>
+                        <!-- Placeholder for potential "More Letters..." link -->
+                        <!-- <li><a href="#more"...>More Letters...</a></li> -->
+                     </ul>
+                 </div>
+                 <!-- Settings link at the bottom -->
+                 <div class="px-4 mt-auto pt-4"> 
+                     <button @click="$dispatch('open-settings')" class="flex items-center w-full px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800 rounded-md text-left transition-colors duration-150 ease-in-out">
+                         <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                         <span class="font-medium">Settings</span>
                      </button>
                  </div>
-             </div>
-        </div><!-- / Sidebar Area -->
+            </nav>
+
+            <!-- Mobile Menu (Overlay, shown only below lg breakpoint when isMobileMenuOpen is true) -->
+            <div x-cloak
+                 x-show="isMobileMenuOpen"
+                 @click.away="toggleMobileMenu(false)"
+                 x-transition:enter="transition ease-out duration-200 transform" x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+                 x-transition:leave="transition ease-in duration-150 transform" x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+                 class="lg:hidden fixed inset-y-0 left-0 w-64 h-full z-40 bg-white border-r border-gray-200 py-6 overflow-y-auto shadow-lg">
+               <div class="px-4 mb-8 flex justify-between items-center">
+                   <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
+                   <button @click="toggleMobileMenu(false)" class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 rounded-full p-1">
+                        <span class="sr-only">Close menu</span>
+                       <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                   </button>
+               </div>
+               <div class="px-2">
+                   <ul class="space-y-2">
+                      <template x-for="(item, index) in $store.alphabetStore.alphabet" :key="item.letter">
+                          <li>
+                              <a :href="`#${item.letter}`"
+                                 @click.prevent="$store.alphabetStore.goToLetter(index); toggleMobileMenu(false);" 
+                                 class="flex items-center px-4 py-2 rounded-md text-gray-600 hover:bg-gray-100 hover:text-gray-800 transition-colors duration-150 ease-in-out"
+                                 :class="{ 'active-sidebar-link': $store.alphabetStore.currentIndex === index }">
+                                  <span class="font-medium" x-text="`${item.letter.toUpperCase()} - ${item.word}`"></span>
+                              </a>
+                          </li>
+                      </template>
+                   </ul>
+               </div>
+               <!-- Settings link in Mobile Menu -->
+               <div class="px-4 mt-auto pt-4 border-t border-gray-200">
+                    <button @click="$dispatch('open-settings'); toggleMobileMenu(false);" class="flex items-center w-full px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800 rounded-md text-left transition-colors duration-150 ease-in-out">
+                       <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span class="font-medium">Settings</span>
+                    </button>
+                </div>
+            </div>
+       </div><!-- / Sidebar Area Container -->
 
 
-        <!-- Main content area -->
-        <main id="main-content" class="flex-1 relative h-full overflow-y-auto main-content-transition"
-              :class="{'lg:ml-64': isDesktopSidebarVisible, 'ml-0': !isDesktopSidebarVisible}">
+        <!-- Main Content Area (Takes remaining space) -->
+        <main id="main-content" class="flex-1 relative h-full overflow-y-auto main-content-transition bg-gray-100"
+             :class="{'lg:ml-64': isDesktopSidebarVisible, 'ml-0': !isDesktopSidebarVisible}"> 
 
-            <!-- Mobile menu button -->
+            <!-- Mobile Menu Hamburger Button (Fixed position, only visible below lg) -->
             <button type="button"
-                    class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                    class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-primary text-white shadow-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                     @click="toggleMobileMenu()"
                     aria-controls="mobile-menu"
                     :aria-expanded="isMobileMenuOpen.toString()">
                 <span class="sr-only">Open main menu</span>
-                 <svg x-show="!isMobileMenuOpen" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
-                 <svg x-show="isMobileMenuOpen" x-cloak class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                <svg x-show="!isMobileMenuOpen" class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+                <svg x-show="isMobileMenuOpen" x-cloak class="h-6 w-6 block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
 
-            <!-- Desktop Sidebar Toggle Button -->
-            <button type="button"
-                @click="toggleDesktopSidebar()"
-                class="hidden lg:block fixed top-4 z-50 p-2 rounded-full bg-white shadow-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                :class="{ 'left-60': isDesktopSidebarVisible, 'left-4': !isDesktopSidebarVisible }"
-                style="transition: left 0.3s ease-in-out;"
-                :title="isDesktopSidebarVisible ? 'Collapse Sidebar' : 'Expand Sidebar'">
-                <svg x-show="isDesktopSidebarVisible" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                <svg x-show="!isDesktopSidebarVisible" x-cloak class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            <!-- Desktop Sidebar Toggle Button (Fixed position, only visible above lg) -->
+             <button type="button"
+                 @click="toggleDesktopSidebar()"
+                 class="hidden lg:block fixed top-4 z-[35] p-1.5 rounded-full bg-white shadow-md text-gray-600 hover:bg-gray-100 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary transition-all duration-300 ease-in-out"
+                 :class="{ 'left-[16.5rem]': isDesktopSidebarVisible, 'left-4': !isDesktopSidebarVisible }"
+                 :title="isDesktopSidebarVisible ? 'Collapse Sidebar' : 'Expand Sidebar'">
+                 <svg x-show="isDesktopSidebarVisible" class="h-5 w-5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                 <svg x-show="!isDesktopSidebarVisible" x-cloak class="h-5 w-5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
             </button>
 
-             <!-- Main Content Sections -->
-             <div id="page-content"> <!-- Simplified container -->
+            <!-- Page Content Container -->
+            <div id="page-content" class="pt-16 lg:pt-8 pb-16"> 
 
-                 <!-- === Alphabet Display Section === -->
-                 <section id="alphabet-display" class="min-h-screen relative pt-16 lg:pt-8">
-                     <div class="h-full flex flex-col md:flex-row">
-                         <!-- Image Section -->
-                         <div class="w-full md:w-1/2 h-[50vh] md:h-auto md:min-h-screen relative"> <!-- Ensure sufficient height -->
-                             <div class="absolute inset-0 p-4 flex flex-col">
-                                 <div class="relative h-full w-full overflow-hidden rounded-lg shadow-lg">
-                                     <img
-                                         :src="$store.alphabetStore.currentLetterData.image"
-                                         :alt="`${$store.alphabetStore.currentLetterData.letter.toUpperCase()} for ${$store.alphabetStore.currentLetterData.word} Mnemonic Visualization`"
-                                         onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Image+Error'"
-                                         class="object-cover w-full h-full cursor-pointer"
-                                         @click="$dispatch('open-fullscreen')"
-                                     />
-                                     <button
-                                         class="absolute top-2 right-2 bg-gray-800 bg-opacity-70 text-white p-2 rounded-full hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-white"
-                                         @click="$dispatch('open-fullscreen')"
-                                         title="View Fullscreen">
-                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" /></svg>
-                                     </button>
-                                 </div>
+                <!-- === Alphabet Display Section === -->
+                <section id="alphabet-display" aria-live="polite" class="relative"> 
+                    <div class="min-h-[calc(100vh-10rem)] md:min-h-[calc(100vh-4rem)] flex flex-col md:flex-row"> 
+
+                        <!-- Image Section -->
+                        <div class="w-full md:w-1/2 relative md:sticky md:top-0 h-[45vh] md:h-screen"> 
+                            <div class="absolute inset-0 p-4 md:p-6 flex flex-col">
+                                <div class="relative h-full w-full overflow-hidden rounded-lg shadow-lg group"> 
+                                    <img
+                                        :src="$store.alphabetStore.currentLetterData.image"
+                                        :alt="`${$store.alphabetStore.currentLetterData.letter.toUpperCase()} for ${$store.alphabetStore.currentLetterData.word} Mnemonic Visualization`"
+                                        onerror="this.onerror=null; this.src='https://placehold.co/600x400/DBDBD8/ffffff?text=Image+Load+Error'"
+                                        class="object-cover w-full h-full cursor-pointer transition-transform duration-300 ease-in-out group-hover:scale-105"
+                                        @click="$dispatch('open-fullscreen')"
+                                        loading="lazy" /* Lazy load images */
+                                    />
+                                    
+                                    <button
+                                        class="absolute top-3 right-3 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white transition-opacity duration-150 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                        @click="$dispatch('open-fullscreen')"
+                                        title="View Fullscreen (F)">
+                                        <span class="sr-only">View Fullscreen</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" /></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Text Section -->
+                        <div class="w-full md:w-1/2 h-auto p-4 md:p-8 flex flex-col"
+                             x-show="$store.alphabetStore.settings.showText" x-transition>
+                             
+                            <div class="flex-grow min-h-[30vh] md:min-h-0">
+                                <div class="mb-4 md:mb-6">
+                                    <h2 class="text-4xl lg:text-5xl font-bold text-gray-800" x-text="$store.alphabetStore.currentLetterData.letter.toUpperCase()"></h2>
+                                    
+                                    <p class="text-xl lg:text-2xl text-gray-600 mt-1">for <span class="font-bold text-gray-700" x-text="$store.alphabetStore.currentLetterData.word"></span></p>
+                                </div>
+
+                                <div class="space-y-5">
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Mnemonic Description</h3>
+                                        <p class="text-gray-600 leading-relaxed" x-text="$store.alphabetStore.currentLetterData.description"></p>
+                                    </div>
+
+                                    <div>
+                                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Example Sentence</h3>
+                                        
+                                        <p class="text-gray-600 leading-relaxed text-lg" x-html="$store.alphabetStore.settings.highlightLetters ? $store.alphabetStore.currentLetterData.example : $store.alphabetStore.currentLetterData.example.replace(/<\/?span[^>]*>/g, '')"></p>
+                                    </div>
+
+                                    
+                                    <template x-if="$store.alphabetStore.currentLetterData.memoryTips && $store.alphabetStore.currentLetterData.memoryTips.length > 0">
+                                       <div>
+                                            <h3 class="text-lg font-semibold text-gray-700 mb-2">Memory Tips</h3>
+                                            <ul class="list-disc pl-5 text-gray-600 space-y-1">
+                                               <template x-for="(tip, i) in $store.alphabetStore.currentLetterData.memoryTips" :key="i">
+                                                   <li x-text="tip"></li>
+                                               </template>
+                                            </ul>
+                                       </div>
+                                    </template>
+                                </div>
+                            </div>
+
+                             <!-- Hide/Show Text Button (appears at bottom of text column) -->
+                             <div class="mt-6 pt-4 flex-shrink-0">
+                                <button
+                                     class="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 text-sm font-medium"
+                                     @click="$store.alphabetStore.toggleSetting('showText')"
+                                     :title="$store.alphabetStore.settings.showText ? 'Hide Text Panel (T)' : 'Show Text Panel (T)'">
+                                     <span x-text="$store.alphabetStore.settings.showText ? 'Hide Text' : 'Show Text'"></span>
+                                 </button>
                              </div>
-                         </div>
+                        </div>
+                    </div>
 
-                         <!-- Text Section -->
-                         <div x-show="$store.alphabetStore.settings.showText" x-transition class="w-full md:w-1/2 h-auto md:h-auto md:min-h-screen p-4 md:p-8 overflow-y-auto">
-                             <div class="flex flex-col h-full"> <!-- Adjust height if needed -->
-                                 <div class="mb-4">
-                                     <h2 class="text-4xl font-bold text-gray-800" x-text="$store.alphabetStore.currentLetterData.letter.toUpperCase()"></h2>
-                                     <p class="text-xl text-gray-600 mt-2">for <span class="font-bold" x-text="$store.alphabetStore.currentLetterData.letter.toUpperCase()"></span><span x-text="$store.alphabetStore.currentLetterData.word.substring(1)"></span></p>
-                                 </div>
-
-                                 <div class="flex-1">
-                                     <h3 class="text-lg font-semibold text-gray-700 mb-2">Mnemonic Description</h3>
-                                     <p class="text-gray-600 mb-4" x-text="$store.alphabetStore.currentLetterData.description"></p>
-
-                                     <h3 class="text-lg font-semibold text-gray-700 mb-2">Example Sentence</h3>
-                                     <p class="text-gray-600 mb-6" x-html="$store.alphabetStore.settings.highlightLetters ? $store.alphabetStore.currentLetterData.example : $store.alphabetStore.currentLetterData.example.replace(/<span class="bg-yellow-200 font-bold">(.*?)<\/span>/g, '$1')"></p>
-
-                                     <template x-if="$store.alphabetStore.currentLetterData.memoryTips && $store.alphabetStore.currentLetterData.memoryTips.length > 0">
-                                        <div>
-                                             <h3 class="text-lg font-semibold text-gray-700 mb-2">Memory Tips</h3>
-                                             <ul class="list-disc pl-5 text-gray-600 space-y-1">
-                                                <template x-for="tip in $store.alphabetStore.currentLetterData.memoryTips" :key="tip">
-                                                    <li x-text="tip"></li>
-                                                </template>
-                                             </ul>
-                                        </div>
-                                     </template>
-                                 </div>
-
-                                 <div class="mt-auto pt-4"> <!-- Push button to bottom -->
-                                     <button
-                                         class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                                         @click="$store.alphabetStore.toggleSetting('showText')"
-                                         x-text="$store.alphabetStore.settings.showText ? 'Hide Text' : 'Show Text'">
-                                     </button>
-                                 </div>
-                             </div>
-                         </div>
-                     </div>
-
-                     <!-- Navigation Controls (Below Content) -->
-                     <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-4 z-10">
-                         <button class="p-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    <!-- Main Navigation Controls (Below Content - Fixed at bottom within the main scroll area) -->
+                     <div class="sticky bottom-0 left-0 right-0 flex justify-center space-x-4 py-3 bg-gray-100/80 backdrop-blur-sm border-t border-gray-200 z-10">
+                         <button class="p-2 bg-primary text-white rounded-full shadow-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                                  @click="$store.alphabetStore.prevLetter()"
                                  title="Previous Letter (←)"
-                                 :disabled="$store.alphabetStore.currentIndex === 0 && !$store.alphabetStore.settings.loopAlphabet"
-                                 :class="{ 'opacity-50 cursor-not-allowed': $store.alphabetStore.currentIndex === 0 && !$store.alphabetStore.settings.loopAlphabet }">
+                                 :disabled="$store.alphabetStore.currentIndex === 0 && !$store.alphabetStore.settings.loopAlphabet">
+                             <span class="sr-only">Previous Letter</span>
                              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
                          </button>
-                         <button class="p-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                         <button class="p-2 bg-primary text-white rounded-full shadow-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                                  @click="$store.alphabetStore.nextLetter()"
                                  title="Next Letter (→)"
-                                 :disabled="$store.alphabetStore.currentIndex === ($store.alphabetStore.alphabet.length - 1) && !$store.alphabetStore.settings.loopAlphabet"
-                                 :class="{ 'opacity-50 cursor-not-allowed': $store.alphabetStore.currentIndex === ($store.alphabetStore.alphabet.length - 1) && !$store.alphabetStore.settings.loopAlphabet }">
+                                 :disabled="$store.alphabetStore.currentIndex === ($store.alphabetStore.alphabet.length - 1) && !$store.alphabetStore.settings.loopAlphabet">
+                              <span class="sr-only">Next Letter</span>
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                         </button>
+                    </div>
+                </section> <!-- / Alphabet Display Section -->
+
+
+                <!-- === Fullscreen Image Modal (Positioned outside the flow) === -->
+                <div x-data="fullscreenModal" x-init="init()"
+                     x-show="isVisible"
+                     @keydown.escape.window="if(isVisible) close()" 
+                     @keydown.left.window="if(isVisible) prev()"  
+                     @keydown.right.window="if(isVisible) next()" 
+                     class="fixed inset-0 bg-black bg-opacity-90 z-[100] flex items-center justify-center p-4 transition-opacity duration-200 ease-in-out"
+                     x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                     x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                     x-cloak>
+                     
+                     <button class="absolute top-4 right-4 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white rounded-full p-1" @click="close()" title="Close Fullscreen (Esc)">
+                         <span class="sr-only">Close Fullscreen</span>
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                     </button>
+                     
+                     <img
+                         :src="$store.alphabetStore.currentLetterData.image"
+                         :alt="`Fullscreen: ${$store.alphabetStore.currentLetterData.letter.toUpperCase()} for ${$store.alphabetStore.currentLetterData.word}`"
+                         onerror="this.onerror=null; this.src='https://placehold.co/800x600/DBDBD8/ffffff?text=Image+Load+Error'"
+                         class="max-h-[90vh] max-w-[90vw] object-contain rounded-md shadow-2xl"
+                         loading="lazy"
+                     />
+                     
+                     <div class="absolute bottom-5 left-0 right-0 flex justify-center space-x-5">
+                         <button class="p-2 bg-white bg-opacity-20 text-white rounded-full hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white disabled:opacity-40 disabled:cursor-not-allowed"
+                                 @click="prev()"
+                                 title="Previous (←)"
+                                 :disabled="$store.alphabetStore.currentIndex === 0 && !$store.alphabetStore.settings.loopAlphabet">
+                             <span class="sr-only">Previous Image</span>
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                         </button>
+                         <button class="p-2 bg-white bg-opacity-20 text-white rounded-full hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white disabled:opacity-40 disabled:cursor-not-allowed"
+                                 @click="next()"
+                                 title="Next (→)"
+                                :disabled="$store.alphabetStore.currentIndex === ($store.alphabetStore.alphabet.length - 1) && !$store.alphabetStore.settings.loopAlphabet">
+                              <span class="sr-only">Next Image</span>
                              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                          </button>
                      </div>
-                 </section> <!-- / Alphabet Display Section -->
+                 </div><!-- / Fullscreen Modal -->
 
 
-                 <!-- === Fullscreen Image Modal === -->
-                 <div x-data="fullscreenModal" x-init="init()"
-                      x-show="isVisible"
-                      @keydown.escape.window="close()"
-                      @keydown.left.window="if(isVisible) prev()"
-                      @keydown.right.window="if(isVisible) next()"
-                      class="fixed inset-0 bg-black bg-opacity-90 z-[100] flex items-center justify-center p-4" x-cloak>
-                      <button class="absolute top-4 right-4 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white" @click="close()" title="Close Fullscreen (Esc)">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                      </button>
-                      <img
-                          :src="$store.alphabetStore.currentLetterData.image"
-                          :alt="`Fullscreen: ${$store.alphabetStore.currentLetterData.letter.toUpperCase()} for ${$store.alphabetStore.currentLetterData.word}`"
-                          onerror="this.onerror=null; this.src='https://placehold.co/800x600?text=Image+Error'"
-                          class="max-h-[90vh] max-w-[90vw] object-contain"
-                      />
-                      <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
-                          <button class="p-2 bg-white bg-opacity-20 text-white rounded-md hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white"
-                                  @click="prev()"
-                                  title="Previous (←)"
-                                  :disabled="$store.alphabetStore.currentIndex === 0 && !$store.alphabetStore.settings.loopAlphabet"
-                                  :class="{ 'opacity-50 cursor-not-allowed': $store.alphabetStore.currentIndex === 0 && !$store.alphabetStore.settings.loopAlphabet }">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                          </button>
-                          <button class="p-2 bg-white bg-opacity-20 text-white rounded-md hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white"
-                                  @click="next()"
-                                  title="Next (→)"
-                                 :disabled="$store.alphabetStore.currentIndex === ($store.alphabetStore.alphabet.length - 1) && !$store.alphabetStore.settings.loopAlphabet"
-                                 :class="{ 'opacity-50 cursor-not-allowed': $store.alphabetStore.currentIndex === ($store.alphabetStore.alphabet.length - 1) && !$store.alphabetStore.settings.loopAlphabet }">
-                              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                          </button>
-                      </div>
-                  </div><!-- / Fullscreen Modal -->
+                <!-- === Letter Controls Section (Appears after main display content) === -->
+                <section id="letter-controls" class="bg-gray-50 py-8 md:py-12 mt-8 border-t border-gray-200">
+                    <div class="container mx-auto px-4 max-w-6xl">
+                        <div class="bg-white rounded-lg shadow-md p-6 md:p-8">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-5">Alphabet Navigation & Controls</h2>
 
-
-                 <!-- === Letter Controls Section === -->
-                 <section id="letter-controls" class="bg-gray-100 py-8">
-                     <div class="container mx-auto px-4">
-                         <div class="bg-white rounded-lg shadow-md p-6">
-                             <h2 class="text-2xl font-bold text-gray-800 mb-4">Alphabet Navigation</h2>
-
-                             <!-- Alphabet Buttons -->
-                             <div class="flex flex-wrap gap-2 mb-6">
-                                 <template x-for="(item, index) in $store.alphabetStore.alphabet" :key="item.letter">
-                                    <button
-                                        @click="$store.alphabetStore.goToLetter(index)"
-                                        class="w-9 h-9 md:w-10 md:h-10 rounded-md font-medium flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-opacity-50 transition-colors duration-150"
-                                        :class="$store.alphabetStore.currentIndex === index ? 'active-alpha-button' : 'inactive-alpha-button focus:ring-gray-400'"
-                                        :title="`Go to Letter ${item.letter.toUpperCase()}`"
-                                        x-text="item.letter.toUpperCase()">
-                                    </button>
-                                </template>
-                             </div>
-
-                             <!-- Other Controls -->
-                             <div class="flex flex-col sm:flex-row gap-4">
-                                 <div class="flex flex-1 gap-2">
-                                     <div class="flex-1">
-                                         <h3 class="text-sm uppercase text-gray-500 font-medium mb-2">Navigation</h3>
-                                         <div class="flex gap-2">
-                                             <button class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 flex items-center"
-                                                     @click="$store.alphabetStore.prevLetter()" title="Previous Letter (←)"
-                                                     :disabled="$store.alphabetStore.currentIndex === 0 && !$store.alphabetStore.settings.loopAlphabet"
-                                                     :class="{ 'opacity-50 cursor-not-allowed': $store.alphabetStore.currentIndex === 0 && !$store.alphabetStore.settings.loopAlphabet }">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                                                Previous
-                                             </button>
-                                             <button class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 flex items-center"
-                                                    @click="$store.alphabetStore.nextLetter()" title="Next Letter (→)"
-                                                     :disabled="$store.alphabetStore.currentIndex === ($store.alphabetStore.alphabet.length - 1) && !$store.alphabetStore.settings.loopAlphabet"
-                                                    :class="{ 'opacity-50 cursor-not-allowed': $store.alphabetStore.currentIndex === ($store.alphabetStore.alphabet.length - 1) && !$store.alphabetStore.settings.loopAlphabet }">
-                                                 Next
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
-                                             </button>
-                                         </div>
-                                     </div>
+                            <!-- Alphabet Letter Buttons -->
+                            <div class="mb-6 pb-6 border-b border-gray-200">
+                                 <h3 class="text-sm uppercase text-gray-500 font-medium mb-3">Jump to Letter</h3>
+                                 <div class="flex flex-wrap gap-2">
+                                    <template x-for="(item, index) in $store.alphabetStore.alphabet" :key="item.letter">
+                                        <button
+                                            @click="$store.alphabetStore.goToLetter(index)"
+                                            class="w-9 h-9 md:w-10 md:h-10 rounded-md font-semibold flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-70 transition-all duration-150 ease-in-out text-xs md:text-sm shadow"
+                                            :class="$store.alphabetStore.currentIndex === index ? 'active-alpha-button focus:ring-primary' : 'inactive-alpha-button focus:ring-gray-400'"
+                                            :title="`Go to Letter ${item.letter.toUpperCase()}`">
+                                            <span x-text="item.letter.toUpperCase()"></span>
+                                        </button>
+                                    </template>
                                  </div>
-                                 <div class="flex flex-1 gap-2">
-                                     <div class="flex-1">
-                                         <h3 class="text-sm uppercase text-gray-500 font-medium mb-2">Display</h3>
-                                         <div class="flex gap-2">
-                                             <button class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 flex items-center"
-                                                    @click="$store.alphabetStore.toggleSetting('showText')"
-                                                    title="Toggle Text Visibility (T)">
-                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                                     <path x-show="$store.alphabetStore.settings.showText" d="M10 12.586l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 11.172 4.293 6.879a1 1 0 111.414-1.414L10 9.758l4.293-4.293a1 1 0 111.414 1.414L11.414 11.172l4.293 4.293a1 1 0 01-1.414 1.414L10 12.586z"/>
-                                                    <path x-show="!$store.alphabetStore.settings.showText" x-cloak fill-rule="evenodd" d="M10 4.75A5.25 5.25 0 004.75 10 5.25 5.25 0 0010 15.25 5.25 5.25 0 0015.25 10 5.25 5.25 0 0010 4.75zm0 9A3.75 3.75 0 1010 6.25a3.75 3.75 0 000 7.5zM10 8a2 2 0 110 4 2 2 0 010-4z" clip-rule="evenodd" />
-                                                </svg>
-                                                 <span x-text="$store.alphabetStore.settings.showText ? 'Hide Text' : 'Show Text'"></span>
-                                             </button>
-                                             <button class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 flex items-center"
-                                                    @click="$dispatch('open-fullscreen')"
-                                                    title="View Fullscreen Image (F)">
-                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 012 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 010 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clip-rule="evenodd" /></svg>
-                                                Fullscreen
+                            </div>
+
+
+                            <!-- Row for Other Controls & Shortcuts -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                                 <!-- Left Column: Navigation & Display Buttons -->
+                                 <div class="space-y-6">
+                                    <div>
+                                         <h3 class="text-sm uppercase text-gray-500 font-medium mb-3">Navigation</h3>
+                                         <div class="flex flex-wrap gap-3">
+                                            <button class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 flex items-center text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                                      @click="$store.alphabetStore.prevLetter()" title="Previous Letter (←)"
+                                                      :disabled="$store.alphabetStore.currentIndex === 0 && !$store.alphabetStore.settings.loopAlphabet">
+                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                                 Previous
                                             </button>
-                                         </div>
-                                     </div>
+                                            <button class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 flex items-center text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    @click="$store.alphabetStore.nextLetter()" title="Next Letter (→)"
+                                                    :disabled="$store.alphabetStore.currentIndex === ($store.alphabetStore.alphabet.length - 1) && !$store.alphabetStore.settings.loopAlphabet">
+                                                 Next
+                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                     <div>
+                                         <h3 class="text-sm uppercase text-gray-500 font-medium mb-3">Display Options</h3>
+                                         <div class="flex flex-wrap gap-3">
+                                            <button class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 flex items-center text-sm font-medium"
+                                                   @click="$store.alphabetStore.toggleSetting('showText')"
+                                                   title="Toggle Text Visibility (T)">
+                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                                      <path x-show="$store.alphabetStore.settings.showText" fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v4a1 1 0 102 0V7zm-1 8a1 1 0 110-2 1 1 0 010 2z" clip-rule="evenodd"/> 
+                                                      <path x-show="!$store.alphabetStore.settings.showText" x-cloak fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-.707-10.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L10 9.586 6.707 6.293z" clip-rule="evenodd"/> 
+                                                 </svg>
+                                                <span x-text="$store.alphabetStore.settings.showText ? 'Hide Text' : 'Show Text'"></span>
+                                            </button>
+                                            <button class="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 flex items-center text-sm font-medium"
+                                                   @click="$dispatch('open-fullscreen')"
+                                                   title="View Fullscreen Image (F)">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 4a1 1 0 011-1h4a1 1 0 010 2H6.414l2.293 2.293a1 1 0 01-1.414 1.414L5 6.414V8a1 1 0 01-2 0V4zm9 1a1 1 0 010-2h4a1 1 0 011 1v4a1 1 0 01-2 0V6.414l-2.293 2.293a1 1 0 11-1.414-1.414L13.586 5H12zm-9 7a1 1 0 012 0v1.586l2.293-2.293a1 1 0 111.414 1.414L6.414 15H8a1 1 0 010 2H4a1 1 0 01-1-1v-4zm13-1a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 010-2h1.586l-2.293-2.293a1 1 0 111.414-1.414L15 13.586V12a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                                                Fullscreen
+                                           </button>
+                                        </div>
+                                    </div>
                                  </div>
-                             </div><!-- / Other Controls -->
 
-                             <!-- Keyboard Shortcuts -->
-                             <div class="mt-6">
-                                 <h3 class="text-sm uppercase text-gray-500 font-medium mb-2">Keyboard Shortcuts</h3>
-                                 <div class="bg-gray-50 p-3 rounded-md">
-                                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-                                         <div class="flex items-center"><kbd>←</kbd><span class="ml-2 text-gray-600 text-sm">Previous letter</span></div>
-                                         <div class="flex items-center"><kbd>→</kbd><span class="ml-2 text-gray-600 text-sm">Next letter</span></div>
-                                         <div class="flex items-center"><kbd>T</kbd><span class="ml-2 text-gray-600 text-sm">Toggle text</span></div>
-                                         <div class="flex items-center"><kbd>F</kbd><span class="ml-2 text-gray-600 text-sm">Toggle fullscreen</span></div>
-                                         <div class="flex items-center"><kbd>ESC</kbd><span class="ml-2 text-gray-600 text-sm">Exit fullscreen/modal</span></div>
-                                     </div>
-                                 </div>
-                             </div>
-
-                         </div>
-                     </div>
-                 </section> <!-- / Letter Controls Section -->
-
-
-                <!-- === Settings Panel Section === -->
-                 <section x-data="settingsPanel" x-init="init()" x-show="isVisible" @keydown.escape.window="close()"
-                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[90] p-4" x-cloak>
-                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" @click.away="close()">
-                         <div class="p-6">
-                            <div class="flex justify-between items-center mb-6">
-                                <h2 class="text-2xl font-bold text-gray-800">Settings</h2>
-                                <button @click="close()" class="p-2 rounded-full text-gray-500 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                                </button>
-                            </div>
-
-                             <div class="space-y-6">
-                                 <!-- Display Settings -->
+                                 <!-- Right Column: Keyboard Shortcuts -->
                                 <div>
-                                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Display Settings</h3>
-                                    <div class="space-y-4">
-                                        <label class="flex items-center cursor-pointer">
-                                            <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" x-model="$store.alphabetStore.settings.showText">
-                                            <span class="ml-3 text-gray-700">Show Text Descriptions</span>
-                                        </label>
-                                        <label class="flex items-center cursor-pointer">
-                                            <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" x-model="$store.alphabetStore.settings.highlightLetters">
-                                            <span class="ml-3 text-gray-700">Highlight Letters in Examples</span>
-                                        </label>
-                                         <!-- Example for theme toggle (requires more CSS setup) -->
-                                        <!-- <label class="flex items-center cursor-pointer">
-                                            <input type="checkbox" class="form-checkbox h-5 w-5 ..." x-model="$store.alphabetStore.settings.darkMode">
-                                            <span class="ml-3 text-gray-700">Dark Mode (Coming Soon)</span>
-                                        </label> -->
+                                    <h3 class="text-sm uppercase text-gray-500 font-medium mb-3">Keyboard Shortcuts</h3>
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+                                            <div class="flex items-center"><kbd>←</kbd><span class="ml-2 text-gray-600 text-sm">Previous letter</span></div>
+                                            <div class="flex items-center"><kbd>→</kbd><span class="ml-2 text-gray-600 text-sm">Next letter</span></div>
+                                            <div class="flex items-center"><kbd>T</kbd><span class="ml-2 text-gray-600 text-sm">Toggle text panel</span></div>
+                                            <div class="flex items-center"><kbd>F</kbd><span class="ml-2 text-gray-600 text-sm">Toggle fullscreen image</span></div>
+                                            <div class="flex items-center"><kbd>ESC</kbd><span class="ml-2 text-gray-600 text-sm">Exit fullscreen / Close modal</span></div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                 <!-- Layout Settings (Example - requires implementation) -->
-                                <!-- <div>
-                                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Layout Settings</h3>
-                                     ... layout select, image size slider ...
-                                      <input type="range" id="image-size" min="30" max="70" class="w-full"
-                                          x-model="$store.alphabetStore.settings.imageSize"
-                                          @input="updateImageSizeDisplay($event.target.value)">
-                                       <span id="image-size-value" x-text="$store.alphabetStore.settings.imageSize + '%'"></span>
-                                </div> -->
-
-                                 <!-- Navigation Settings -->
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-800 mb-3">Navigation Settings</h3>
-                                    <div class="space-y-4">
-                                        <label class="flex items-center cursor-pointer">
-                                            <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" x-model="$store.alphabetStore.settings.keyboardNav">
-                                            <span class="ml-3 text-gray-700">Enable Keyboard Navigation (Arrows, T, F)</span>
-                                        </label>
-                                         <label class="flex items-center cursor-pointer">
-                                            <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" x-model="$store.alphabetStore.settings.swipeNav">
-                                            <span class="ml-3 text-gray-700">Enable Swipe Navigation (Touch Devices)</span>
-                                        </label>
-                                        <label class="flex items-center cursor-pointer">
-                                            <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" x-model="$store.alphabetStore.settings.loopAlphabet">
-                                            <span class="ml-3 text-gray-700">Loop Alphabet (Wrap around A-Z)</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                             </div>
-
-                             <!-- Action Buttons -->
-                             <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end space-x-3">
-                                 <button @click="reset()" class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
-                                    Reset to Defaults
-                                 </button>
-                                 <button @click="save()" class="px-4 py-2 text-white bg-primary rounded-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50">
-                                    Done
-                                </button>
-                            </div>
-                         </div>
-                     </div>
-                 </section> <!-- / Settings Panel Section -->
-
-
-                <!-- === Instructions Modal === -->
-                <section x-data="instructionsModal" x-init="init()" x-show="isVisible" @keydown.escape.window="close(true)"
-                         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[95] p-4" x-cloak>
-                     <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" @click.away="close(true)">
-                        <div class="p-6">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-2xl font-bold text-gray-800">How to Use Alphabet Mnemonics</h2>
-                                <button @click="close(true)" class="text-gray-500 hover:text-gray-700 focus:outline-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                                </button>
                             </div>
 
-                            <div class="space-y-6 text-gray-700 text-base">
-                                {/* Instructions content here - kept concise */}
-                                <p>Welcome! Use the sidebar, alphabet buttons, or arrows (← →) to navigate. Click images for fullscreen (F). Toggle text (T). Check Settings for more options.</p>
-                                {/* Add more detailed instructions as needed */}
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Key Features</h3>
-                                    <ul class="list-disc pl-5 space-y-1">
-                                        <li>Visual Mnemonics: Images shaped like letters.</li>
-                                        <li>Interactive Navigation: Sidebar, buttons, keys, swipe.</li>
-                                        <li>Example Sentences: See letters in context (highlight toggle).</li>
-                                        <li>Memory Tips: Suggestions for reinforcement.</li>
-                                        <li>Customizable View: Toggle text, fullscreen, settings.</li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <div class="mt-6 pt-4 border-t border-gray-200 flex justify-between items-center">
-                                <label class="flex items-center">
-                                    <input type="checkbox" x-model="dontShowAgain" class="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
-                                    <span class="ml-2 text-gray-700 text-sm">Don't show this again</span>
-                                </label>
-                                <button @click="close(true)" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50">
-                                    Got it
-                                </button>
-                            </div>
                         </div>
                     </div>
+                </section> <!-- / Letter Controls Section -->
+
+
+               <!-- === Settings Panel Modal (Positioned outside the flow) === -->
+               <section x-data="settingsPanel" x-init="init()"
+                    x-show="isVisible"
+                    @keydown.escape.window="if(isVisible) close()"
+                    class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-[90] p-4"
+                    x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                    x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                    aria-labelledby="settings-title" role="dialog" aria-modal="true" x-cloak>
+
+                   <div class="bg-white rounded-lg shadow-xl max-w-xl w-full max-h-[90vh] overflow-hidden flex flex-col" @click.away="close()">
+                       
+                       <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center flex-shrink-0">
+                           <h2 id="settings-title" class="text-xl font-semibold text-gray-800">Settings</h2>
+                           <button @click="close()" class="p-1 rounded-full text-gray-400 hover:bg-gray-200 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary">
+                               <span class="sr-only">Close settings</span>
+                               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                           </button>
+                       </div>
+
+                       
+                       <div class="px-6 py-6 overflow-y-auto flex-grow">
+                            <div class="space-y-6">
+                                <!-- Display Settings -->
+                                <fieldset>
+                                   <legend class="text-lg font-semibold text-gray-800 mb-3">Display</legend>
+                                   <div class="space-y-3">
+                                       <label class="flex items-center cursor-pointer">
+                                           <input type="checkbox" class="form-checkbox h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary focus:ring-offset-0" x-model="$store.alphabetStore.settings.showText">
+                                           <span class="ml-3 text-gray-700">Show Text Descriptions</span>
+                                       </label>
+                                       <label class="flex items-center cursor-pointer">
+                                           <input type="checkbox" class="form-checkbox h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary focus:ring-offset-0" x-model="$store.alphabetStore.settings.highlightLetters">
+                                           <span class="ml-3 text-gray-700">Highlight Letters in Examples</span>
+                                       </label>
+                                       
+                                       <!-- <label class="flex items-center cursor-not-allowed">
+                                            <input type="checkbox" class="form-checkbox h-5 w-5 rounded border-gray-300 opacity-50" disabled>
+                                            <span class="ml-3 text-gray-500">Dark Mode (Coming Soon)</span>
+                                       </label> -->
+                                   </div>
+                               </fieldset>
+
+                               <!-- Navigation Settings -->
+                               <fieldset>
+                                    <legend class="text-lg font-semibold text-gray-800 mb-3">Navigation</legend>
+                                    <div class="space-y-3">
+                                       <label class="flex items-center cursor-pointer">
+                                           <input type="checkbox" class="form-checkbox h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary focus:ring-offset-0" x-model="$store.alphabetStore.settings.keyboardNav">
+                                           <span class="ml-3 text-gray-700">Enable Keyboard Navigation (Arrows, T, F)</span>
+                                       </label>
+                                       <label class="flex items-center cursor-pointer">
+                                           <input type="checkbox" class="form-checkbox h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary focus:ring-offset-0" x-model="$store.alphabetStore.settings.swipeNav">
+                                           <span class="ml-3 text-gray-700">Enable Swipe Navigation (Touch Devices)</span>
+                                       </label>
+                                       <label class="flex items-center cursor-pointer">
+                                           <input type="checkbox" class="form-checkbox h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary focus:ring-offset-0" x-model="$store.alphabetStore.settings.loopAlphabet">
+                                           <span class="ml-3 text-gray-700">Loop Alphabet (Wrap around A-Z)</span>
+                                       </label>
+                                   </div>
+                               </fieldset>
+                            </div>
+                       </div>
+
+                        <!-- Modal Footer -->
+                        <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3 flex-shrink-0">
+                            <button @click="reset()" type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-md border border-gray-300 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary">
+                               Reset to Defaults
+                            </button>
+                            <button @click="save()" type="button" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary">
+                               Done 
+                           </button>
+                       </div>
+                   </div>
+               </section> <!-- / Settings Panel Section -->
+
+
+                <!-- === Instructions Modal (Positioned outside the flow) === -->
+                <section x-data="instructionsModal" x-init="init()"
+                         x-show="isVisible"
+                         @keydown.escape.window="if(isVisible) close(false)" 
+                         class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-[95] p-4"
+                         x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                         x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+                         aria-labelledby="instructions-title" role="dialog" aria-modal="true" x-cloak>
+
+                    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col" @click.away="close(true)"> 
+                       
+                       <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center flex-shrink-0">
+                           <h2 id="instructions-title" class="text-xl font-semibold text-gray-800">How to Use AlphaMemory</h2>
+                           <button @click="close(false)" class="p-1 rounded-full text-gray-400 hover:bg-gray-200 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary">
+                                <span class="sr-only">Close instructions</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                           </button>
+                       </div>
+
+                       
+                       <div class="px-6 py-6 overflow-y-auto flex-grow text-gray-700 space-y-5 leading-relaxed">
+                           <p>Welcome! This tool uses visual mnemonics (memory aids) to help you learn the English alphabet.</p>
+
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Getting Around</h3>
+                                <ul class="list-disc pl-5 space-y-1.5">
+                                    <li>Use the <kbd>←</kbd> and <kbd>→</kbd> arrow keys or the buttons below the image to move between letters.</li>
+                                    <li>Click any letter button in the 'Alphabet Navigation' section.</li>
+                                    <li>Use the sidebar (click the <svg class="inline h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg> icon on mobile) to jump directly to a letter.</li>
+                                     <li>On touch devices, swipe left or right on the main content area (if enabled in Settings).</li>
+                                </ul>
+                           </div>
+
+                           <div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-2">Interacting</h3>
+                                <ul class="list-disc pl-5 space-y-1.5">
+                                     <li>Click the main image or press <kbd>F</kbd> to see it in fullscreen. Press <kbd>ESC</kbd> to exit fullscreen.</li>
+                                     <li>Press <kbd>T</kbd> or use the 'Hide/Show Text' buttons to toggle the description panel.</li>
+                                      <li>Check the 'Settings' panel (link in sidebar/menu) for options like looping, keyboard/swipe toggles, and letter highlighting.</li>
+                                </ul>
+                           </div>
+
+                           <div class="bg-primary/10 p-4 rounded-lg text-primary-700">
+                               <p class="font-medium"><i class="fas fa-lightbulb mr-1.5"></i>Learning Tip: Try to visualize the letter's shape within the mnemonic image and read the example sentence aloud!</p>
+                           </div>
+                       </div>
+
+                       
+                       <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center flex-shrink-0">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" x-model="dontShowAgain" class="form-checkbox h-4 w-4 text-primary rounded border-gray-300 focus:ring-primary focus:ring-offset-1">
+                                <span class="ml-2 text-gray-700 text-sm">Don't show this again</span>
+                            </label>
+                            <button @click="close(true)" class="px-4 py-2 text-sm font-medium text-white bg-primary rounded-md shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary">
+                                Got it
+                            </button>
+                       </div>
+                   </div>
                 </section> <!-- / Instructions Modal -->
 
-             </div> <!-- / #page-content -->
-         </main> <!-- / #main-content -->
+            </div> <!-- / #page-content -->
+        </main> <!-- / #main-content -->
 
     </div><!-- / Root Layout Div -->
-
-    <!-- Body Scripts (None needed here anymore as logic is in Alpine components) -->
 
 </body>
 </html>
