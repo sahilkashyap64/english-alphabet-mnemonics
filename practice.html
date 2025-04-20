@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoneme & Reading Practice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        .sound-button {
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+        }
+        .sound-button:hover {
+            background-color: #dbeafe; /* Tailwind blue-100 */
+        }
+        .sound-button:active {
+            transform: scale(0.95);
+        }
+        .prose-sm { max-width: none; } /* Override prose width constraint if needed */
+         [x-cloak] { display: none !important; }
+    </style>
+</head>
+
+<body class="bg-gray-100 p-4 md:p-8" x-data="phonemePracticePage()" x-cloak>
+
+    <div class="max-w-6xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
+
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 text-center">English Phonemes & Reading Practice</h1>
+
+        <!-- Interactive Phoneme Chart Section -->
+        <section class="mb-8">
+            <h2 class="text-xl font-semibold text-blue-700 mb-4">Interactive Phoneme Chart</h2>
+            <p class="text-sm text-gray-600 mb-4">Click on a sound symbol or keyword to hear its pronunciation. <strong class="text-red-600">(Requires corresponding audio files in '/audio/' folder)</strong></p>
+
+            <div class="space-y-6">
+                <!-- Loop through categories -->
+                <template x-for="category in soundCategories" :key="category">
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-700 mb-3 capitalize border-b pb-1" x-text="category"></h3>
+                        <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+                            <!-- Loop through sounds in this category -->
+                            <template x-for="sound in getSoundsByCategory(category)" :key="sound.symbol + sound.keyword">
+                                <button
+                                    @click="playSound(sound.audioUrl)"
+                                    class="sound-button border border-gray-300 rounded-lg p-3 text-center focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    :aria-label="`Play sound ${sound.keyword || sound.symbol}`">
+                                    <div class="font-mono text-lg font-bold" x-text="sound.symbol"></div>
+                                    <div class="text-xs text-gray-600 mt-1" x-text="sound.keyword"></div>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+                 <!-- Audio Player Element (Hidden) -->
+                <audio x-ref="audioPlayer"></audio>
+                 <p x-show="audioError" class="text-red-500 text-sm mt-2" x-text="audioError"></p>
+            </div>
+        </section>
+
+        <!-- Key Concepts Section -->
+        <section class="mb-8 border-t pt-6">
+            <h2 class="text-xl font-semibold text-blue-700 mb-4">Key Phonetic Concepts</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                <div class="bg-gray-50 p-3 rounded border">
+                    <h3 class="font-semibold mb-1">Phoneme</h3>
+                    <p class="text-gray-700">The smallest unit of sound in a language that can distinguish one word from another (e.g., the /k/, /æ/, /t/ sounds in 'cat').</p>
+                </div>
+                <div class="bg-gray-50 p-3 rounded border">
+                    <h3 class="font-semibold mb-1">Grapheme</h3>
+                    <p class="text-gray-700">The letter or letters that represent a single phoneme (e.g., 'c' for /k/, 'sh' for /ʃ/, 'ea' for /iː/ in 'read').</p>
+                </div>
+                <div class="bg-gray-50 p-3 rounded border">
+                    <h3 class="font-semibold mb-1">Diphthong</h3>
+                    <p class="text-gray-700">A sound formed by combining two vowels in a single syllable, where the sound begins as one vowel and moves towards another (e.g., /aɪ/ in 'ไc<u>e</u>', /ɔɪ/ in 'b<u>oy</u>', /aʊ/ in '<u>ou</u>t'). Listen to them in the chart!</p>
+                </div>
+                 <div class="bg-gray-50 p-3 rounded border">
+                    <h3 class="font-semibold mb-1">Blend (Consonants)</h3>
+                    <p class="text-gray-700">Two or three consonants grouped together where each sound is still heard (e.g., '<u>bl</u>ack', '<u>str</u>eet'). Distinct from digraphs where letters make one sound.</p>
+                </div>
+                 <div class="bg-gray-50 p-3 rounded border">
+                    <h3 class="font-semibold mb-1">Digraph</h3>
+                    <p class="text-gray-700">Two letters that represent a single sound (e.g., '<u>sh</u>ip', '<u>ch</u>ick', '<u>th</u>in', '<u>ph</u>one', 'm<u>ea</u>t').</p>
+                </div>
+                <div class="bg-gray-50 p-3 rounded border">
+                    <h3 class="font-semibold mb-1">Blending (Reading Skill)</h3>
+                    <p class="text-gray-700">The process of pushing together individual sounds sequentially to pronounce a word (e.g., /s/ /i/ /t/ -> 'sit').</p>
+                </div>
+                <div class="bg-gray-50 p-3 rounded border">
+                    <h3 class="font-semibold mb-1">Segmenting (Spelling Skill)</h3>
+                    <p class="text-gray-700">The process of breaking a word down into its individual phonemes (e.g., 'shop' -> /ʃ/ /ɒ/ /p/).</p>
+                </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reading Practice Section -->
+        <section class="border-t pt-6">
+            <h2 class="text-xl font-semibold text-blue-700 mb-4">Reading Aloud Practice</h2>
+            <p class="text-sm text-gray-600 mb-4">Read the text below aloud, focusing on clear pronunciation of the sounds you've explored.</p>
+
+            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg mb-4 min-h-[100px] prose prose-sm">
+                <p x-html="currentText()"></p> <!-- Use x-html if your texts might contain formatting -->
+            </div>
+
+            <div class="flex justify-center space-x-4">
+                <button @click="prevText()" :disabled="currentTextIndex === 0"
+                        class="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                    Previous Text
+                </button>
+                 <span class="text-gray-600 self-center" x-text="`Text ${currentTextIndex + 1} of ${practiceTexts.length}`"></span>
+                <button @click="nextText()" :disabled="currentTextIndex === practiceTexts.length - 1"
+                        class="px-4 py-2 bg-gray-600 text-white rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400">
+                    Next Text
+                </button>
+            </div>
+        </section>
+
+    </div><!-- / End main container -->
+
+    <script>
+        function phonemePracticePage() {
+            return {
+                audioError: null, // To display errors if audio fails
+                sounds: [
+                    // --- Consonants ---
+                    { symbol: '/p/', keyword: 'pet', type: 'consonants', audioUrl: '/audio/p.mp3' },
+                    { symbol: '/b/', keyword: 'bet', type: 'consonants', audioUrl: '/audio/b.mp3' },
+                    { symbol: '/t/', keyword: 'ten', type: 'consonants', audioUrl: '/audio/t.mp3' },
+                    { symbol: '/d/', keyword: 'den', type: 'consonants', audioUrl: '/audio/d.mp3' },
+                    { symbol: '/k/', keyword: 'cat', type: 'consonants', audioUrl: '/audio/k.mp3' },
+                    { symbol: '/ɡ/', keyword: 'get', type: 'consonants', audioUrl: '/audio/g.mp3' },
+                    { symbol: '/f/', keyword: 'fan', type: 'consonants', audioUrl: '/audio/f.mp3' },
+                    { symbol: '/v/', keyword: 'van', type: 'consonants', audioUrl: '/audio/v.mp3' },
+                    { symbol: '/θ/', keyword: 'thin', type: 'consonants', audioUrl: '/audio/th_unvoiced.mp3' }, // unvoiced th
+                    { symbol: '/ð/', keyword: 'then', type: 'consonants', audioUrl: '/audio/th_voiced.mp3' },     // voiced th
+                    { symbol: '/s/', keyword: 'sit', type: 'consonants', audioUrl: '/audio/s.mp3' },
+                    { symbol: '/z/', keyword: 'zip', type: 'consonants', audioUrl: '/audio/z.mp3' },
+                    { symbol: '/ʃ/', keyword: 'ship', type: 'consonants', audioUrl: '/audio/sh.mp3' }, // sh
+                    { symbol: '/ʒ/', keyword: 'measure', type: 'consonants', audioUrl: '/audio/zh.mp3' }, // zh like measure
+                    { symbol: '/h/', keyword: 'hat', type: 'consonants', audioUrl: '/audio/h.mp3' },
+                    { symbol: '/m/', keyword: 'mat', type: 'consonants', audioUrl: '/audio/m.mp3' },
+                    { symbol: '/n/', keyword: 'net', type: 'consonants', audioUrl: '/audio/n.mp3' },
+                    { symbol: '/ŋ/', keyword: 'sing', type: 'consonants', audioUrl: '/audio/ng.mp3' }, // ng
+                    { symbol: '/l/', keyword: 'let', type: 'consonants', audioUrl: '/audio/l.mp3' },
+                    { symbol: '/r/', keyword: 'rat', type: 'consonants', audioUrl: '/audio/r.mp3' },
+                    { symbol: '/w/', keyword: 'wet', type: 'consonants', audioUrl: '/audio/w.mp3' },
+                    { symbol: '/j/', keyword: 'yet', type: 'consonants', audioUrl: '/audio/y.mp3' }, // y sound as in 'yes'
+
+                    // --- Short Vowels ---
+                    { symbol: '/æ/', keyword: 'cat', type: 'short vowels', audioUrl: '/audio/a_short.mp3' },  // short a
+                    { symbol: '/ɛ/', keyword: 'bed', type: 'short vowels', audioUrl: '/audio/e_short.mp3' },  // short e
+                    { symbol: '/ɪ/', keyword: 'sit', type: 'short vowels', audioUrl: '/audio/i_short.mp3' },  // short i
+                    { symbol: '/ɒ/', keyword: 'hot', type: 'short vowels', audioUrl: '/audio/o_short.mp3' },  // short o (British often) or /ɑ/ (American hot)
+                    { symbol: '/ʊ/', keyword: 'put', type: 'short vowels', audioUrl: '/audio/oo_short.mp3'}, // short oo as in put/book
+                    { symbol: '/ʌ/', keyword: 'cut', type: 'short vowels', audioUrl: '/audio/u_short.mp3' },  // short u
+
+                    // --- Long Vowels (using common vowel team spellings as keywords) ---
+                    { symbol: '/eɪ/', keyword: 'r<u>ai</u>n', type: 'long vowels', audioUrl: '/audio/a_long.mp3' },  // long a (ay, ai, a_e)
+                    { symbol: '/iː/', keyword: 'm<u>ee</u>t', type: 'long vowels', audioUrl: '/audio/e_long.mp3' },  // long e (ee, ea, e_e)
+                    { symbol: '/aɪ/', keyword: 'p<u>ie</u>', type: 'long vowels', audioUrl: '/audio/i_long.mp3' },  // long i (ie, i_e, igh) -> ALSO A DIPHTHONG
+                    { symbol: '/oʊ/', keyword: 'b<u>oa</u>t', type: 'long vowels', audioUrl: '/audio/o_long.mp3' },  // long o (oa, o_e, ow) -> ALSO A DIPHTHONG
+                    { symbol: '/uː/', keyword: 'bl<u>ue</u>', type: 'long vowels', audioUrl: '/audio/oo_long.mp3'}, // long u/oo (ew, ue, u_e, oo)
+                    { symbol: '/juː/',keyword: 'c<u>u</u>be', type: 'long vowels', audioUrl: '/audio/u_long_y.mp3' }, // long u with /y/ sound
+
+                     // --- Diphthongs ---
+                     { symbol: '/ɔɪ/', keyword: 'b<u>oy</u>', type: 'diphthongs', audioUrl: '/audio/oi.mp3' },     // oy, oi
+                     { symbol: '/aʊ/', keyword: 'c<u>ow</u>', type: 'diphthongs', audioUrl: '/audio/ow.mp3' },     // ow, ou
+
+                    // --- Other Vowels / R-Controlled ---
+                     { symbol: '/ɑː/', keyword: 'f<u>ar</u>', type: 'r-controlled', audioUrl: '/audio/ar.mp3' },   // ar
+                     { symbol: '/ɜː/', keyword: 'h<u>er</u>', type: 'r-controlled', audioUrl: '/audio/er.mp3' },   // er, ir, ur
+                     { symbol: '/ɔː/', keyword: 'f<u>or</u>k', type: 'r-controlled', audioUrl: '/audio/or.mp3' },  // or, ore
+                     { symbol: '/ɛər/', keyword: 'ch<u>air</u>',type: 'r-controlled', audioUrl: '/audio/air.mp3' }, // air, are
+                     { symbol: '/ɪər/', keyword: 'd<u>ear</u>', type: 'r-controlled', audioUrl: '/audio/ear.mp3' }, // ear, ere
+                     { symbol: '/ə/', keyword: '<u>a</u>bout', type: 'other vowels', audioUrl: '/audio/schwa.mp3' },  // Schwa
+
+
+                    // --- Common Consonant Digraphs ---
+                    { symbol: '/tʃ/', keyword: 'chip', type: 'digraphs', audioUrl: '/audio/ch.mp3' },  // ch
+                    // SH, TH (voiced/unvoiced), NG, are listed under consonants already by sound
+                    { symbol: '/f/', keyword: 'phone', type: 'digraphs', audioUrl: '/audio/f.mp3'}, // ph=/f/ (reuse f sound)
+                    { symbol: '/k/', keyword: 'duck', type: 'digraphs', audioUrl: '/audio/k.mp3'}, // ck=/k/ (reuse k sound)
+
+
+                ],
+                soundCategories: ['consonants', 'short vowels', 'long vowels', 'diphthongs', 'r-controlled', 'other vowels', 'digraphs'],
+
+                getSoundsByCategory(category) {
+                    return this.sounds.filter(s => s.type === category);
+                },
+
+                playSound(audioUrl) {
+                    if (!audioUrl) {
+                        this.audioError = "No audio file specified for this sound.";
+                        console.warn("playSound called with no audioUrl");
+                        return;
+                    }
+                    const player = this.$refs.audioPlayer;
+                    player.src = audioUrl;
+                    player.play().catch(error => {
+                        console.error("Error playing sound:", error);
+                        this.audioError = `Could not play ${audioUrl}. Check if the file exists and the path is correct. Error: ${error.message}`;
+                    });
+                    this.audioError = null; // Clear previous errors
+                },
+
+                // --- Reading Practice ---
+                currentTextIndex: 0,
+                practiceTexts: [
+                    "The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.", // Pangram
+                    "She sells seashells by the seashore. How much wood would a woodchuck chuck if a woodchuck could chuck wood?", // Tongue twisters
+                    "A big cat sat on the red mat. The fat rat ran past the sleeping dog. Did you get the pin?", // CVC focus
+                    "The rain in Spain stays mainly in the plain. He feeds the sheep green leaves by the sea. My bike has a bright light.", // Long vowels focus
+                    "The boy found a toy cow down town. Boil the oil to avoid noise.", // Diphthongs focus
+                    "A farmer starts work early near the church. Her bird sings by the tall fir tree. Pour more corn for the horse.", // R-controlled focus
+                    "Chip the sheep should wash his ship. This thin thread is theirs. Where should the phone ring?" // Digraphs focus
+                ],
+                currentText() {
+                    return this.practiceTexts[this.currentTextIndex];
+                },
+                nextText() {
+                    if (this.currentTextIndex < this.practiceTexts.length - 1) {
+                        this.currentTextIndex++;
+                    }
+                },
+                prevText() {
+                    if (this.currentTextIndex > 0) {
+                        this.currentTextIndex--;
+                    }
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

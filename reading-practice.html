@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Success Practice Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        /* Simple table borders */
+        th, td {
+            border: 1px solid #e5e7eb; /* gray-200 */
+            padding: 0.5rem 0.75rem;
+            vertical-align: top;
+        }
+        thead th {
+            background-color: #f9fafb; /* gray-50 */
+            text-align: left;
+        }
+        /* Improve radio button alignment slightly */
+        input[type="radio"] {
+            margin-top: 0.2em;
+        }
+        textarea {
+            min-height: 60px;
+        }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+
+<body class="bg-gray-100 p-4 md:p-8" x-data="practicePageData()" x-init="init()" x-cloak>
+
+    <div class="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
+
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 text-center">Reading Success Practice Page</h1>
+        <p class="text-center text-gray-600 mb-6">Assess your alignment with the 3½ Essential Components for Reading Success.</p>
+
+        <template x-for="(component, cIndex) in components" :key="cIndex">
+            <section class="mb-8 border-t pt-6">
+                <h2 class="text-xl font-bold mb-1" :id="component.id">
+                   <span class="text-blue-700" x-text="`Component #${component.number}:`"></span>
+                   <span x-text="component.title"></span>
+                </h2>
+                <p class="text-gray-700 italic mb-4" x-text="component.focus"></p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse text-sm">
+                        <thead>
+                            <tr>
+                                <th class="w-2/5">Checklist Item</th>
+                                <th class="text-center">Yes</th>
+                                <th class="text-center">Partly</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center" x-show="component.hasNA">N/A</th>
+                                <th class="w-2/5">Notes & Action Steps</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="(item, iIndex) in component.items" :key="iIndex">
+                                <tr>
+                                    <td x-text="`${iIndex+1}. ${item.text}`"></td>
+                                    <td class="text-center">
+                                        <input type="radio" :name="`c${cIndex}i${iIndex}`" value="yes"
+                                               x-model="state[component.id].items[iIndex]"
+                                               class="form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="radio" :name="`c${cIndex}i${iIndex}`" value="partly"
+                                               x-model="state[component.id].items[iIndex]"
+                                               class="form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="radio" :name="`c${cIndex}i${iIndex}`" value="no"
+                                               x-model="state[component.id].items[iIndex]"
+                                               class="form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                    </td>
+                                    <td class="text-center" x-show="component.hasNA">
+                                        <input type="radio" :name="`c${cIndex}i${iIndex}`" value="na"
+                                               x-model="state[component.id].items[iIndex]"
+                                               class="form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                    </td>
+                                    <td>
+                                        <textarea x-model="state[component.id].notes[iIndex]"
+                                                  class="w-full p-1 border border-gray-300 rounded text-sm"
+                                                  :placeholder="item.prompt || 'Enter notes...'"></textarea>
+                                    </td>
+                                </tr>
+                            </template>
+                             <!-- Overall Confidence Row -->
+                             <tr>
+                                 <td class="font-semibold" :colspan="component.hasNA ? 1 : 1">Overall Confidence:</td>
+                                 <td class="text-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" :name="`c${cIndex}_confidence`" value="high" x-model="state[component.id].confidence" class="form-radio h-4 w-4"> <span class="ml-1">High</span>
+                                    </label>
+                                </td>
+                                <td class="text-center">
+                                     <label class="inline-flex items-center">
+                                        <input type="radio" :name="`c${cIndex}_confidence`" value="medium" x-model="state[component.id].confidence" class="form-radio h-4 w-4"> <span class="ml-1">Med</span>
+                                    </label>
+                                 </td>
+                                <td class="text-center">
+                                    <label class="inline-flex items-center">
+                                        <input type="radio" :name="`c${cIndex}_confidence`" value="low" x-model="state[component.id].confidence" class="form-radio h-4 w-4"> <span class="ml-1">Low</span>
+                                    </label>
+                                </td>
+                                <td :colspan="component.hasNA ? 2 : 1"> <!-- Span 2 if NA exists -->
+                                     <textarea x-model="state[component.id].improvementArea" class="w-full p-1 border border-gray-300 rounded text-sm" placeholder="Primary area for improvement..."></textarea>
+                                 </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </template>
+
+        <!-- Terminology Refresh -->
+        <section class="mb-8 border-t pt-6">
+            <h2 class="text-xl font-bold mb-3">Terminology Refresh</h2>
+            <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm">
+                <li><strong>Phoneme:</strong> Smallest unit of sound.</li>
+                <li><strong>Grapheme:</strong> Letter(s) representing a phoneme.</li>
+                <li><strong>Blend:</strong> Combining sounds smoothly -> /c/ /a/ /t/ = /cat/.</li>
+                <li><strong>Segment:</strong> Breaking words into sounds -> /cat/ = /c/ /a/ /t/.</li>
+                <li><strong>Decode:</strong> Reading (Print -> Sound).</li>
+                <li><strong>Encode:</strong> Spelling (Sound -> Print).</li>
+                <li><strong>Explicit Instruction:</strong> Direct, clear teaching ("I do, we do, you do").</li>
+                <li><strong>Systematic Instruction:</strong> Logical, planned sequence.</li>
+                <li><strong>Synthetic Phonics:</strong> Focus on blending individual phonemes.</li>
+            </ul>
+        </section>
+
+        <!-- Summary & Action Planning -->
+        <section class="mb-8 border-t pt-6">
+            <h2 class="text-xl font-bold mb-3">Summary & Action Planning</h2>
+            <div class="space-y-4">
+                <div>
+                    <label for="summaryStrength" class="block text-sm font-medium text-gray-700 mb-1">1. Greatest Strength (Based on above):</label>
+                    <textarea id="summaryStrength" x-model="state.summary.strength" class="w-full p-2 border border-gray-300 rounded" rows="2"></textarea>
+                </div>
+                 <div>
+                    <label for="summaryImprovement" class="block text-sm font-medium text-gray-700 mb-1">2. Primary Area for Improvement:</label>
+                    <textarea id="summaryImprovement" x-model="state.summary.improvement" class="w-full p-2 border border-gray-300 rounded" rows="2"></textarea>
+                </div>
+                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">3. Next Steps (Choose 1-3 Realistic Actions):</label>
+                    <div class="space-y-2">
+                        <template x-for="(action, index) in state.summary.actions" :key="index">
+                            <div class="flex items-center space-x-2">
+                                <input type="checkbox" :id="'action'+index" x-model="action.checked" class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500">
+                                <input type="text" x-model="action.text" :placeholder="`Action ${index+1}...`" class="flex-grow p-1 border border-gray-300 rounded text-sm">
+                                <input type="date" x-model="action.date" class="p-1 border border-gray-300 rounded text-sm">
+                            </div>
+                        </template>
+                    </div>
+                 </div>
+            </div>
+        </section>
+
+         <!-- Footer/Save Button -->
+        <div class="mt-8 text-center border-t pt-4">
+            <p class="text-xs text-gray-500">Your progress is saved automatically in this browser.</p>
+             <button @click="resetData" class="mt-2 px-4 py-2 text-sm bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50">
+                 Reset All Fields
+             </button>
+        </div>
+    </div><!-- / End main container -->
+
+    <script>
+        function practicePageData() {
+            // Helper to generate initial state for items
+            const createInitialItems = (count) => Array(count).fill('');
+            const createInitialNotes = (count) => Array(count).fill('');
+            const createInitialActionItems = (count) => Array.from({ length: count }, () => ({ text: '', date: '', checked: false }));
+
+            // Initial blank state structure
+            const blankState = {
+                component1: { items: createInitialItems(5), notes: createInitialNotes(5), confidence: '', improvementArea: '' }, // The What
+                component2: { items: createInitialItems(3), notes: createInitialNotes(3), confidence: '', improvementArea: '' }, // The When
+                component3: { items: createInitialItems(4), notes: createInitialNotes(4), confidence: '', improvementArea: '' }, // The How
+                component3_5: { items: createInitialItems(6), notes: createInitialNotes(6), confidence: '', improvementArea: '' }, // The Medium
+                summary: {
+                    strength: '',
+                    improvement: '',
+                    actions: createInitialActionItems(3)
+                }
+            };
+
+            return {
+                state: JSON.parse(JSON.stringify(blankState)), // Start with a deep copy
+                components: [
+                    {
+                        number: '1', id: 'component1', title: 'The What - Synthetic Phonics Curriculum', hasNA: false,
+                        focus: 'Explicitly teaching letter-sound correspondences (phonemes) and how to blend them into words. Avoids relying on guessing or context clues.',
+                        items: [
+                            { text: 'Do our primary reading curricula (Tier 1) fundamentally use a synthetic phonics approach? (Letters -> Sounds -> Blend)', prompt: 'If not, what approach? List curricula.' },
+                            { text: 'Does the curriculum explicitly teach individual phonemes (sounds) associated with graphemes (letters)?' },
+                            { text: 'Does the curriculum systematically teach students how to blend sounds together sequentially to read words?', prompt: 'How is blending taught?' },
+                            { text: 'Does instruction minimize reliance on multi-cueing/guessing strategies (e.g., pictures, first letter)?', prompt: 'Review plans for conflicts.' },
+                            { text: 'Is there a clear, logical, and systematic scope and sequence for introducing sounds/blending?', prompt: 'Is it documented & followed?' }
+                        ]
+                    },
+                    {
+                        number: '2', id: 'component2', title: 'The When - 30 Minutes, 5 Days a Week', hasNA: false,
+                        focus: 'Consistent, dedicated time for foundational reading skill practice.',
+                        items: [
+                            { text: 'Is there a protected block of at least 30 minutes scheduled daily for phonics/foundational skills in K-2?', prompt: 'Avg time? Interruptions?' },
+                            { text: 'Does this dedicated instruction occur consistently, ideally 5 days per week?', prompt: 'Avg days/week? Barriers?' },
+                            { text: 'Does this time include both explicit teacher instruction and student practice?', prompt: 'Typical breakdown?' }
+                        ]
+                    },
+                     {
+                         number: '3', id: 'component3', title: 'The How - Rigorous Practice', hasNA: false,
+                        focus: 'Practice should be structured, engaging, appropriately challenging, and aimed at mastery.',
+                        items: [
+                            { text: 'Does student practice involve structured exercises reinforcing the taught skill?', prompt: 'What does practice look like?' },
+                            { text: 'Does practice provide sufficient repetition for mastery/automaticity?', prompt:'' },
+                            { text: 'Is practice differentiated/scaffolded for varying needs & appropriate challenge?', prompt:'Support for struggling/advanced?' },
+                            { text: 'Does practice focus primarily on decoding/encoding using taught phonics patterns?', prompt:'Activities aligned?' }
+                        ]
+                    },
+                    {
+                        number: '3½', id: 'component3_5', title: 'The Medium - Leveraging Technology', hasNA: true,
+                        focus: 'Technology can amplify effectiveness via data, feedback, individualization, and consistency.',
+                        items: [
+                             { text: 'Are we currently using technology/digital tools specifically for synthetic phonics?', prompt:'List specific tools.' },
+                             { text: 'If yes, do these tools provide teachers with actionable data on student progress/gaps?', prompt:'How is data used?' },
+                             { text: 'Do these tools offer immediate, corrective feedback to students during practice?' },
+                             { text: 'Do these tools allow for individualized practice, adapting difficulty?' },
+                             { text: 'Does technology help ensure fidelity & consistent practice (usage time/completion)?', prompt:'How supports 30min/5day?' },
+                             { text: 'Could technology be *better* leveraged to strengthen Components #1, #2, or #3?', prompt:'Opportunities/tools?' }
+                        ]
+                    }
+                ],
+                init() {
+                    console.log('Initializing Practice Page Data...');
+                    const savedState = localStorage.getItem('readingPracticePageState');
+                    if (savedState) {
+                        try {
+                            // Basic merge strategy: update properties that exist in saved data
+                            let loadedState = JSON.parse(savedState);
+                            for (const key in this.state) {
+                                if (loadedState[key]) {
+                                     // Simple merge - might need deeper merge for arrays/objects if structure changes significantly
+                                     if (typeof this.state[key] === 'object' && this.state[key] !== null) {
+                                        Object.assign(this.state[key], loadedState[key]);
+                                        // Deeper merge for actions array to ensure length matches initial state
+                                        if(key === 'summary' && loadedState.summary.actions) {
+                                            this.state.summary.actions = this.state.summary.actions.map((action, index) => ({
+                                                ...action, // Keep initial structure
+                                                ...(loadedState.summary.actions[index] || {}) // Overlay saved data
+                                            }));
+                                        }
+                                     } else {
+                                         this.state[key] = loadedState[key];
+                                     }
+                                }
+                            }
+                             console.log('Loaded saved state.');
+                        } catch (e) {
+                            console.error('Error loading saved state:', e);
+                            localStorage.removeItem('readingPracticePageState'); // Clear corrupted data
+                             this.state = JSON.parse(JSON.stringify(blankState)); // Reset if error
+                        }
+                    } else {
+                        console.log('No saved state found, using initial state.');
+                    }
+
+                    // Watch for changes and save to localStorage
+                    this.$watch('state', (newState) => {
+                        localStorage.setItem('readingPracticePageState', JSON.stringify(newState));
+                        console.log('State saved.');
+                    }, { deep: true }); // Use deep watch for nested objects/arrays
+                },
+                resetData() {
+                    if (confirm('Are you sure you want to clear all fields on this page?')) {
+                         this.state = JSON.parse(JSON.stringify(blankState)); // Reset state to initial blank structure
+                         localStorage.removeItem('readingPracticePageState'); // Clear storage too
+                        console.log('State reset.');
+                    }
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
