@@ -43,6 +43,16 @@
         }
 
         color-scheme: light;
+
+        /* Basic transition for sidebar width */
+        .sidebar-transition {
+             transition: width 0.3s ease-in-out;
+        }
+
+        /* Basic transition for main content margin */
+       .main-content-transition {
+             transition: margin-left 0.3s ease-in-out;
+       }
     </style>
 
     <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.8/handlebars.min.js"></script>
@@ -114,6 +124,11 @@
                             '8xl': '88rem',
                             '9xl': '96rem',
                         },
+                        transitionProperty: {
+                           'width': 'width',
+                           'margin': 'margin-left, margin-right',
+                        },
+                        // Add other theme extensions...
                         animation: {
                             'fade-in': 'fadeIn 0.5s ease-in',
                             'fade-out': 'fadeOut 0.5s ease-out',
@@ -229,6 +244,7 @@
                         textColor: ['active', 'disabled'],
                     },
                 },
+                plugins: [], // Ensure plugins array is defined
             }
         });
     </script>
@@ -282,214 +298,223 @@
         body {
             font-family: Roboto, Inter, system-ui, sans-serif;
         }
+        [x-cloak] { display: none !important; }
     </style>
 </head>
 
-<body class="antialiased text-gray-800 min-h-screen flex flex-col">
+<body class="antialiased text-gray-800 min-h-screen flex flex-col bg-gray-100">
     <!-- Skip to main content link for accessibility -->
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:p-4 focus:bg-white focus:text-black">
          Skip to main content
       </a>
 
-    <!-- Main content area -->
-    <main id="main-content" class="flex-1 relative h-full">
-        <div id="RolloutPageContent">
-            <element id="d18f797a-5d96-4cac-8d3a-04609e81ad08" data-section-id="d18f797a-5d96-4cac-8d3a-04609e81ad08">
+    <!-- Root Alpine Component -->
+    <div x-data="{ isMobileMenuOpen: false, isDesktopSidebarVisible: true }" class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar Area -->
+        <div class="flex-shrink-0 sidebar-transition lg:w-64" :class="{'lg:w-64': isDesktopSidebarVisible, 'lg:w-0': !isDesktopSidebarVisible}">
+             <!-- Desktop Sidebar -->
+             <nav x-show="isDesktopSidebarVisible"
+                  x-transition:enter="transition ease-in-out duration-300"
+                  x-transition:enter-start="opacity-0"
+                  x-transition:enter-end="opacity-100"
+                  x-transition:leave="transition ease-in-out duration-300"
+                  x-transition:leave-start="opacity-100"
+                  x-transition:leave-end="opacity-0"
+                  class="hidden lg:flex flex-col w-64 h-full bg-white border-r border-gray-200 py-6 overflow-y-auto fixed lg:relative z-30">
+                  <!-- Fixed width content inside the transitioning container -->
+                  <div class="px-4 mb-8">
+                      <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
+                  </div>
+                  <div class="flex-1 px-2 overflow-y-auto" style="max-height: calc(100vh - 150px);">
+                      <ul id="alphabet-sidebar" class="space-y-2">
+                          <!-- Dynamic items injected here -->
+                      </ul>
+                  </div>
+                  <div class="px-4 mt-6">
+                      <a href="#settings" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          </svg>
+                          Settings
+                      </a>
+                  </div>
+             </nav>
+
+             <!-- Mobile Menu -->
+             <div id="mobile-menu"
+                  x-cloak
+                  x-show="isMobileMenuOpen"
+                  @click.away="isMobileMenuOpen = false"
+                  x-transition:enter="transition ease-out duration-200 transform"
+                  x-transition:enter-start="-translate-x-full"
+                  x-transition:enter-end="translate-x-0"
+                  x-transition:leave="transition ease-in duration-150 transform"
+                  x-transition:leave-start="translate-x-0"
+                  x-transition:leave-end="-translate-x-full"
+                  class="lg:hidden fixed inset-y-0 left-0 w-64 h-full z-40 bg-white border-r border-gray-200 py-6 overflow-y-auto">
+                <div class="px-4 mb-8 flex justify-between items-center">
+                    <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
+                    <button @click="isMobileMenuOpen = false" class="text-gray-500 hover:text-gray-700">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="px-2">
+                    <ul id="alphabet-sidebar-list" class="space-y-2">
+                        <!-- Dynamic mobile menu items injected here -->
+                    </ul>
+                </div>
+                 <div class="px-4 mt-6">
+                    <a href="#settings" @click="isMobileMenuOpen = false" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                         </svg>
+                         Settings
+                     </a>
+                 </div>
+             </div>
+        </div>
+
+        <!-- Main content area -->
+        <main id="main-content" class="flex-1 relative h-full overflow-y-auto main-content-transition"
+              :class="{'lg:ml-64': isDesktopSidebarVisible, 'ml-0': !isDesktopSidebarVisible}">
+
+            <!-- Mobile menu button -->
+            <button type="button"
+                    class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                    @click="isMobileMenuOpen = !isMobileMenuOpen"
+                    aria-controls="mobile-menu"
+                    :aria-expanded="isMobileMenuOpen.toString()">
+                <span class="sr-only">Open main menu</span>
+                 <!-- Icon when menu is closed -->
+                 <svg x-cloak x-show="!isMobileMenuOpen" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                 </svg>
+                 <!-- Icon when menu is open -->
+                 <svg x-cloak x-show="isMobileMenuOpen" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                 </svg>
+            </button>
+
+            <!-- Desktop Sidebar Toggle Button -->
+            <button
+                @click="isDesktopSidebarVisible = !isDesktopSidebarVisible"
+                class="hidden lg:block fixed top-4 z-50 p-2 rounded-full bg-white shadow-md text-gray-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                :class="{ 'left-60': isDesktopSidebarVisible, 'left-4': !isDesktopSidebarVisible }"
+                style="transition: left 0.3s ease-in-out;"
+                :title="isDesktopSidebarVisible ? 'Collapse Sidebar' : 'Expand Sidebar'">
+                <svg x-show="isDesktopSidebarVisible" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /> <!-- Arrow left -->
+                </svg>
+                <svg x-show="!isDesktopSidebarVisible" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /> <!-- Arrow right -->
+                 </svg>
+            </button>
+
+             <div id="RolloutPageContent">
+                 <element id="d18f797a-5d96-4cac-8d3a-04609e81ad08" data-section-id="d18f797a-5d96-4cac-8d3a-04609e81ad08">
+                     <section id="alphabet-display" class="min-h-screen relative pt-16 lg:pt-4"> <!-- Add padding top for fixed buttons -->
+                         <div class="h-full flex flex-col md:flex-row">
+                             <!-- Image Section -->
+                             <div class="w-full md:w-1/2 h-1/2 md:h-full relative">
+                                 <div class="absolute inset-0 p-4 flex flex-col">
+                                     <div class="relative h-full w-full overflow-hidden rounded-lg shadow-lg">
+                                         <img id="letter-image" src="https://placehold.co/600x400?text=A+for+Apple" alt="A for Apple Mnemonic Visualization" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=A+for+Apple'" class="object-cover w-full h-full cursor-pointer"
+                                             onclick="openFullscreenImage()" />
+                                         <button class="absolute top-2 right-2 bg-gray-800 bg-opacity-70 text-white p-2 rounded-full hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-white" onclick="openFullscreenImage()" title="View Fullscreen">
+                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+                                             </svg>
+                                         </button>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Text Section -->
+                             <div id="text-content" class="w-full md:w-1/2 h-1/2 md:h-full p-4 md:p-8 overflow-auto">
+                                 <div class="h-full flex flex-col">
+                                     <div class="mb-4">
+                                         <h2 class="text-4xl font-bold text-gray-800">A</h2>
+                                         <p class="text-xl text-gray-600 mt-2">for <span class="font-bold">A</span>pple</p>
+                                     </div>
+
+                                     <div class="flex-1">
+                                         <h3 class="text-lg font-semibold text-gray-700 mb-2">Mnemonic Description</h3>
+                                         <p class="text-gray-600 mb-4">
+                                             The letter "A" looks like an apple with a stem at the top. Visualize an apple standing on its bottom point, with the curved top representing the top of the apple.
+                                         </p>
+
+                                         <h3 class="text-lg font-semibold text-gray-700 mb-2">Example Sentence</h3>
+                                         <p class="text-gray-600 mb-6">
+                                             The <span class="bg-yellow-200 font-bold">A</span>mazing <span class="bg-yellow-200 font-bold">a</span>pple <span class="bg-yellow-200 font-bold">a</span>ppeared <span class="bg-yellow-200 font-bold">a</span>bove
+                                             the <span class="bg-yellow-200 font-bold">a</span>ncient tree.
+                                         </p>
+
+                                         <h3 class="text-lg font-semibold text-gray-700 mb-2">Memory Tips</h3>
+                                         <ul class="list-disc pl-5 text-gray-600 space-y-1">
+                                             <li>Associate the pointed top of "A" with the stem of an apple</li>
+                                             <li>The crossbar in "A" represents the horizontal line through an apple</li>
+                                             <li>Think of the sound "ah" when biting into a juicy apple</li>
+                                         </ul>
+                                     </div>
+
+                                     <div class="mt-4">
+                                         <button id="toggle-text" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" onclick="toggleText()">
+                                             Hide Text
+                                         </button>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+
+                         <!-- Navigation Controls -->
+                         <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
+                             <button class="p-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" onclick="prevLetter()" title="Previous Letter (←)">
+                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                 </svg>
+                             </button>
+                             <button class="p-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" onclick="nextLetter()" title="Next Letter (→)">
+                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                 </svg>
+                             </button>
+                         </div>
+                     </section>
+                 </element>
+
+                 <!-- Fullscreen Image Modal -->
+                 <div id="fullscreen-modal" class="fixed inset-0 bg-black bg-opacity-90 z-[100] hidden flex items-center justify-center" x-data="{ isFsVisible: false }" x-show="isFsVisible" @keydown.escape.window="isFsVisible = false; closeFullscreenImage();" x-cloak>
+                      <button class="absolute top-4 right-4 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white" @click="isFsVisible = false; closeFullscreenImage();" title="Close Fullscreen (Esc)">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                      </button>
+                      <img id="fullscreen-image" src="https://placehold.co/800x600?text=A+for+Apple" alt="Fullscreen Mnemonic Visualization" onerror="this.onerror=null; this.src='https://placehold.co/800x600?text=A+for+Apple'" class="max-h-[90vh] max-w-[90vw] object-contain" />
+                      <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
+                          <button class="p-2 bg-white bg-opacity-20 text-white rounded-md hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white" onclick="prevLetterFullscreen()" title="Previous (←)">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                              </svg>
+                          </button>
+                          <button class="p-2 bg-white bg-opacity-20 text-white rounded-md hover:bg-opacity-30 focus:outline-none focus:ring-2 focus:ring-white" onclick="nextLetterFullscreen()" title="Next (→)">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                              </svg>
+                          </button>
+                      </div>
+                  </div>
 
 
-                <div id="root" class="min-h-screen bg-gray-100">
-                    <div class="flex h-screen overflow-hidden">
-                        <!-- Sidebar Navigation -->
-          <!-- Wrap navigation in an Alpine component -->
-<div x-data="{ isOpen: false, sidebarVisible: true }" class="relative">
-
-    <!-- Mobile menu button (visible on mobile only) -->
-    <button type="button" 
-            class="lg:hidden fixed top-4 left-4 z-50 p-2 rounded-md bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-            @click="isOpen = !isOpen" 
-            aria-controls="mobile-menu" 
-            :aria-expanded="isOpen">
-      <!-- Icon when menu is closed -->
-      <svg x-cloak x-show="!isOpen" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-      <!-- Icon when menu is open -->
-      <svg x-cloak x-show="isOpen" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
-  
-    <!-- Desktop Sidebar (visible on large screens only) -->
-    <nav x-show="sidebarVisible" class="hidden lg:flex flex-col w-64 h-full bg-white border-r border-gray-200 py-6 overflow-y-auto">
-      <div class="px-4 mb-8">
-        <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
-      </div>
-      <!-- Scrollable container for dynamic list -->
-      <div class="flex-1 px-2 overflow-y-auto" style="max-height: calc(100vh - 150px);">
-        <ul id="alphabet-sidebar" class="space-y-2">
-          <!-- Dynamic items injected here -->
-        </ul>
-      </div>
-      <div class="px-4 mt-6">
-        <a href="#settings" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-          </svg>
-          Settings
-        </a>
-      </div>
-      <!-- Desktop Sidebar Toggle Button -->
-      <button 
-        class="hidden lg:block absolute top-4 right-0 z-50 p-2 rounded-md bg-gray-800 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-        @click="sidebarVisible = !sidebarVisible"
-      >
-        <svg x-show="sidebarVisible" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <!-- Arrow left icon -->
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-        <svg x-show="!sidebarVisible" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <!-- Arrow right icon -->
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
-    </nav>
-  
-    <!-- Mobile Menu (visible on small screens only) -->
-    <div id="mobile-menu" x-cloak x-show="isOpen" 
-         x-transition:enter="transition ease-out duration-100 transform"
-         x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition ease-in duration-75 transform" 
-         x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
-         @click.away="isOpen = false" @resize.window="if (window.innerWidth > 1024) isOpen = false"
-         class="lg:hidden fixed top-0 left-0 w-64 h-full z-40 bg-white border-r border-gray-200 py-6 overflow-y-auto">
-      <div class="px-4 mb-8">
-        <h1 class="text-xl font-bold text-gray-800">Alphabet Mnemonics</h1>
-      </div>
-      <div class="px-2">
-        <ul id="alphabet-sidebar-list" class="space-y-2">
-          <!-- Dynamic mobile menu items injected here -->
-        </ul>
-      </div>
-      <div class="px-4 mt-6">
-        <a href="#settings" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md" @click="isOpen = false">
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-          </svg>
-          Settings
-        </a>
-      </div>
-    </div>
-  </div>
-  
-  
-
-                        <!-- Main Content Area -->
-                        <main class="flex-1 overflow-auto">
-                            <section id="alphabet-display" class="h-screen relative">
-                                <div class="h-full flex flex-col md:flex-row">
-                                    <!-- Image Section -->
-                                    <div class="w-full md:w-1/2 h-1/2 md:h-full relative">
-                                        <div class="absolute inset-0 p-4 flex flex-col">
-                                            <div class="relative h-full w-full overflow-hidden rounded-lg">
-                                                <img id="letter-image" src="https://placehold.co/600x400?text=A+for+Apple" alt="A for Apple Mnemonic Visualization" onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=A+for+Apple'" class="object-cover w-full h-full cursor-pointer"
-                                                    onclick="openFullscreenImage()" />
-                                                <button class="absolute top-2 right-2 bg-gray-800 bg-opacity-70 text-white p-2 rounded-full" onclick="openFullscreenImage()">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
-                  </svg>
-                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Text Section -->
-                                    <div id="text-content" class="w-full md:w-1/2 h-1/2 md:h-full p-4 md:p-8 overflow-auto">
-                                        <div class="h-full flex flex-col">
-                                            <div class="mb-4">
-                                                <h2 class="text-4xl font-bold text-gray-800">A</h2>
-                                                <p class="text-xl text-gray-600 mt-2">for <span class="font-bold">A</span>pple</p>
-                                            </div>
-
-                                            <div class="flex-1">
-                                                <h3 class="text-lg font-semibold text-gray-700 mb-2">Mnemonic Description</h3>
-                                                <p class="text-gray-600 mb-4">
-                                                    The letter "A" looks like an apple with a stem at the top. Visualize an apple standing on its bottom point, with the curved top representing the top of the apple.
-                                                </p>
-
-                                                <h3 class="text-lg font-semibold text-gray-700 mb-2">Example Sentence</h3>
-                                                <p class="text-gray-600 mb-6">
-                                                    The <span class="bg-yellow-200 font-bold">A</span>mazing <span class="bg-yellow-200 font-bold">a</span>pple <span class="bg-yellow-200 font-bold">a</span>ppeared <span class="bg-yellow-200 font-bold">a</span>bove
-                                                    the <span class="bg-yellow-200 font-bold">a</span>ncient tree.
-                                                </p>
-
-                                                <h3 class="text-lg font-semibold text-gray-700 mb-2">Memory Tips</h3>
-                                                <ul class="list-disc pl-5 text-gray-600">
-                                                    <li>Associate the pointed top of "A" with the stem of an apple</li>
-                                                    <li>The crossbar in "A" represents the horizontal line through an apple</li>
-                                                    <li>Think of the sound "ah" when biting into a juicy apple</li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="mt-4">
-                                                <button id="toggle-text" class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700" onclick="toggleText()">
-                  Hide Text
-                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Navigation Controls -->
-                                <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
-                                    <button class="p-2 bg-gray-800 text-white rounded-md hover:bg-gray-700" onclick="prevLetter()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-                                    <button class="p-2 bg-gray-800 text-white rounded-md hover:bg-gray-700" onclick="nextLetter()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-                                </div>
-                            </section>
-
-                            <!-- Fullscreen Image Modal -->
-                            <div id="fullscreen-modal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center">
-                                <button class="absolute top-4 right-4 text-white" onclick="closeFullscreenImage()">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-                                <img id="fullscreen-image" src="https://placehold.co/800x600?text=A+for+Apple" alt="Fullscreen Mnemonic Visualization" onerror="this.onerror=null; this.src='https://placehold.co/800x600?text=A+for+Apple'" class="max-h-screen max-w-screen-lg object-contain"
-                                />
-                                <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-4">
-                                    <button class="p-2 bg-white bg-opacity-20 text-white rounded-md hover:bg-opacity-30" onclick="prevLetterFullscreen()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-                                    <button class="p-2 bg-white bg-opacity-20 text-white rounded-md hover:bg-opacity-30" onclick="nextLetterFullscreen()">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-                                </div>
-                            </div>
-
-                           
-
-            </element>
-            <element id="7852b478-ba47-44cd-b8c9-5b599de52cb9" data-section-id="7852b478-ba47-44cd-b8c9-5b599de52cb9">
-
-
-                <div id="root">
+                 <element id="7852b478-ba47-44cd-b8c9-5b599de52cb9" data-section-id="7852b478-ba47-44cd-b8c9-5b599de52cb9">
+                    <!-- ... rest of your Letter Controls section ... -->
+                    <div id="root">
                     <section id="letter-controls" class="bg-gray-100 py-8">
                         <div class="container mx-auto px-4">
                             <div class="bg-white rounded-lg shadow-md p-6">
@@ -544,23 +569,23 @@
                                     <div class="bg-gray-50 p-3 rounded-md">
                                         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                                             <div class="flex items-center">
-                                                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 w-8 rounded mr-2">←</span>
+                                                <kbd class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 w-8 rounded mr-2 font-sans">←</kbd>
                                                 <span class="text-gray-600">Previous letter</span>
                                             </div>
                                             <div class="flex items-center">
-                                                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 w-8 rounded mr-2">→</span>
+                                                <kbd class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 w-8 rounded mr-2 font-sans">→</kbd>
                                                 <span class="text-gray-600">Next letter</span>
                                             </div>
                                             <div class="flex items-center">
-                                                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2">T</span>
+                                                <kbd class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2 font-sans">T</kbd>
                                                 <span class="text-gray-600">Toggle text visibility</span>
                                             </div>
                                             <div class="flex items-center">
-                                                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2">F</span>
-                                                <span class="text-gray-600">Fullscreen mode</span>
+                                                <kbd class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2 font-sans">F</kbd>
+                                                <span class="text-gray-600">Toggle fullscreen mode</span>
                                             </div>
                                             <div class="flex items-center">
-                                                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2">ESC</span>
+                                                <kbd class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2 font-sans">ESC</kbd>
                                                 <span class="text-gray-600">Exit fullscreen</span>
                                             </div>
                                         </div>
@@ -572,50 +597,66 @@
                         <script>
                             // Add additional keyboard shortcuts
                             document.addEventListener('keydown', function(e) {
-                                if (e.key === 't' || e.key === 'T') {
-                                    toggleText();
-                                } else if (e.key === 'f' || e.key === 'F') {
-                                    openFullscreenImage();
+                                // Avoid triggering shortcuts if typing in an input/textarea
+                                if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'SELECT') {
+                                   return;
                                 }
+                                // Avoid conflict with fullscreen modal escape
+                                const isFsModalVisible = !document.getElementById('fullscreen-modal').classList.contains('hidden');
+
+                                if (!isFsModalVisible) {
+                                    if (e.key === 't' || e.key === 'T') {
+                                        toggleText();
+                                    } else if (e.key === 'f' || e.key === 'F') {
+                                         openFullscreenImage();
+                                    }
+                                }
+                                // Escape key is handled by the modal's Alpine directive now
                             });
 
                             // Update button text when toggling text visibility
                             function updateToggleTextButton() {
                                 const button = document.getElementById('toggle-text-btn');
-                                if (button) {
+                                const mainToggleButton = document.getElementById('toggle-text'); // The button near the text content
+                                if (button && mainToggleButton) {
                                     const isTextVisible = !document.getElementById('text-content').classList.contains('hidden');
+                                    const buttonText = `${isTextVisible ? 'Hide' : 'Show'} Text`;
+
                                     button.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd" />
-            </svg>
-            ${isTextVisible ? 'Hide Text' : 'Show Text'}
-          `;
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd" />
+                                        </svg>
+                                        ${buttonText}
+                                    `;
+                                    mainToggleButton.textContent = buttonText;
                                 }
                             }
 
-                            // Override the toggleText function to update the button
-                            const originalToggleText = window.toggleText;
-                            window.toggleText = function() {
-                                if (originalToggleText) {
-                                    originalToggleText();
-                                } else {
-                                    const textContent = document.getElementById('text-content');
-                                    if (textContent) {
-                                        textContent.classList.toggle('hidden');
-                                    }
+                            // Store the original toggleText function if it exists, otherwise define a basic one
+                            const originalToggleText = window.toggleText || function() {
+                                const textContent = document.getElementById('text-content');
+                                if (textContent) {
+                                     textContent.classList.toggle('hidden');
                                 }
-                                updateToggleTextButton();
                             };
+
+                            // Override the toggleText function to update the button
+                            window.toggleText = function() {
+                                originalToggleText(); // Call the original/basic function
+                                updateToggleTextButton(); // Update button text
+                            };
+
+                            // Initial call to set correct button text on load
+                            document.addEventListener('DOMContentLoaded', updateToggleTextButton);
                         </script>
                     </section>
                 </div>
+                 </element>
 
-            </element>
-            <element id="238935ca-6d7b-4e14-b80c-c7fcb543fe80" data-section-id="238935ca-6d7b-4e14-b80c-c7fcb543fe80">
-
-
-                <div id="root">
-                    <section id="settings-panel" class="bg-gray-100 py-8">
+                 <element id="238935ca-6d7b-4e14-b80c-c7fcb543fe80" data-section-id="238935ca-6d7b-4e14-b80c-c7fcb543fe80">
+                    <!-- ... rest of your Settings section ... -->
+                      <div id="root">
+                    <section id="settings-panel" class="bg-gray-100 py-8 hidden"> <!-- Start hidden -->
                         <div class="container mx-auto px-4">
                             <div class="bg-white rounded-lg shadow-md p-6">
                                 <div class="flex justify-between items-center mb-6">
@@ -635,21 +676,21 @@
                                             <div>
                                                 <label class="flex items-center cursor-pointer">
                   <div class="relative">
-                    <input type="checkbox" id="toggle-theme" class="sr-only" checked />
-                    <div class="block bg-gray-300 w-14 h-8 rounded-full"></div>
-                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                    <input type="checkbox" id="toggle-theme" class="sr-only peer" checked />
+                    <div class="block bg-gray-300 w-14 h-8 rounded-full peer-checked:bg-blue-500"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform peer-checked:translate-x-6"></div>
                   </div>
                   <div class="ml-3 text-gray-700">Light Mode</div>
                 </label>
-                                                <p class="text-sm text-gray-500 mt-1">Toggle between light and dark interface.</p>
+                                                <p class="text-sm text-gray-500 mt-1">Toggle between light and dark interface. (Future feature)</p>
                                             </div>
 
                                             <div>
                                                 <label class="flex items-center cursor-pointer">
                   <div class="relative">
-                    <input type="checkbox" id="toggle-text-display" class="sr-only" checked />
-                    <div class="block bg-gray-300 w-14 h-8 rounded-full"></div>
-                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                    <input type="checkbox" id="toggle-text-display" class="sr-only peer" checked />
+                    <div class="block bg-gray-300 w-14 h-8 rounded-full peer-checked:bg-blue-500"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform peer-checked:translate-x-6"></div>
                   </div>
                   <div class="ml-3 text-gray-700">Show Text</div>
                 </label>
@@ -659,9 +700,9 @@
                                             <div>
                                                 <label class="flex items-center cursor-pointer">
                   <div class="relative">
-                    <input type="checkbox" id="toggle-highlights" class="sr-only" checked />
-                    <div class="block bg-gray-300 w-14 h-8 rounded-full"></div>
-                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                    <input type="checkbox" id="toggle-highlights" class="sr-only peer" checked />
+                    <div class="block bg-gray-300 w-14 h-8 rounded-full peer-checked:bg-blue-500"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform peer-checked:translate-x-6"></div>
                   </div>
                   <div class="ml-3 text-gray-700">Highlight Letters</div>
                 </label>
@@ -702,9 +743,9 @@
                                             <div>
                                                 <label class="flex items-center cursor-pointer">
                   <div class="relative">
-                    <input type="checkbox" id="toggle-animations" class="sr-only" checked />
-                    <div class="block bg-gray-300 w-14 h-8 rounded-full"></div>
-                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                    <input type="checkbox" id="toggle-animations" class="sr-only peer" checked />
+                    <div class="block bg-gray-300 w-14 h-8 rounded-full peer-checked:bg-blue-500"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform peer-checked:translate-x-6"></div>
                   </div>
                   <div class="ml-3 text-gray-700">Enable Animations</div>
                 </label>
@@ -731,9 +772,9 @@
                                             <div>
                                                 <label class="flex items-center cursor-pointer">
                   <div class="relative">
-                    <input type="checkbox" id="toggle-keyboard-navigation" class="sr-only" checked />
-                    <div class="block bg-gray-300 w-14 h-8 rounded-full"></div>
-                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                    <input type="checkbox" id="toggle-keyboard-navigation" class="sr-only peer" checked />
+                    <div class="block bg-gray-300 w-14 h-8 rounded-full peer-checked:bg-blue-500"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform peer-checked:translate-x-6"></div>
                   </div>
                   <div class="ml-3 text-gray-700">Keyboard Navigation</div>
                 </label>
@@ -743,9 +784,9 @@
                                             <div>
                                                 <label class="flex items-center cursor-pointer">
                   <div class="relative">
-                    <input type="checkbox" id="toggle-swipe-navigation" class="sr-only" checked />
-                    <div class="block bg-gray-300 w-14 h-8 rounded-full"></div>
-                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                    <input type="checkbox" id="toggle-swipe-navigation" class="sr-only peer" checked />
+                    <div class="block bg-gray-300 w-14 h-8 rounded-full peer-checked:bg-blue-500"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform peer-checked:translate-x-6"></div>
                   </div>
                   <div class="ml-3 text-gray-700">Swipe Navigation</div>
                 </label>
@@ -755,9 +796,9 @@
                                             <div>
                                                 <label class="flex items-center cursor-pointer">
                   <div class="relative">
-                    <input type="checkbox" id="toggle-loop-alphabet" class="sr-only" checked />
-                    <div class="block bg-gray-300 w-14 h-8 rounded-full"></div>
-                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                    <input type="checkbox" id="toggle-loop-alphabet" class="sr-only peer" checked />
+                    <div class="block bg-gray-300 w-14 h-8 rounded-full peer-checked:bg-blue-500"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform peer-checked:translate-x-6"></div>
                   </div>
                   <div class="ml-3 text-gray-700">Loop Alphabet</div>
                 </label>
@@ -779,31 +820,16 @@
                         </div>
 
                         <script>
-                            // Position the toggles based on their checked state
+                            // Simplified toggle handling - Tailwind peer-checked handles visuals
                             document.addEventListener('DOMContentLoaded', function() {
-                                const toggles = document.querySelectorAll('input[type="checkbox"]');
-                                toggles.forEach(toggle => {
-                                    const dot = toggle.parentElement.querySelector('.dot');
-                                    if (toggle.checked) {
-                                        dot.classList.add('translate-x-6');
-                                    } else {
-                                        dot.classList.remove('translate-x-6');
-                                    }
-
-                                    toggle.addEventListener('change', function() {
-                                        if (this.checked) {
-                                            dot.classList.add('translate-x-6');
-                                        } else {
-                                            dot.classList.remove('translate-x-6');
-                                        }
-                                    });
-                                });
-
                                 // Update the image size value display
                                 const imageSizeSlider = document.getElementById('image-size');
                                 const imageSizeValue = document.getElementById('image-size-value');
 
                                 if (imageSizeSlider && imageSizeValue) {
+                                    // Initial value
+                                    imageSizeValue.textContent = imageSizeSlider.value + '%';
+                                    // Update on input
                                     imageSizeSlider.addEventListener('input', function() {
                                         imageSizeValue.textContent = this.value + '%';
                                     });
@@ -811,62 +837,97 @@
 
                                 // Close settings panel
                                 const closeButton = document.getElementById('close-settings');
-                                if (closeButton) {
+                                const settingsPanel = document.getElementById('settings-panel');
+                                if (closeButton && settingsPanel) {
                                     closeButton.addEventListener('click', function() {
-                                        const settingsPanel = document.getElementById('settings-panel');
-                                        if (settingsPanel) {
-                                            settingsPanel.classList.add('hidden');
+                                        settingsPanel.classList.add('hidden');
+                                    });
+                                }
+
+                                // Toggle text display sync
+                                const textToggle = document.getElementById('toggle-text-display');
+                                if (textToggle) {
+                                    // Set initial state based on actual text visibility
+                                     const isTextVisible = !document.getElementById('text-content')?.classList.contains('hidden');
+                                     textToggle.checked = isTextVisible;
+
+                                    textToggle.addEventListener('change', function() {
+                                        if (typeof window.toggleText === 'function') {
+                                            // Call the main toggle function only if the checkbox state *doesn't* match the actual state
+                                            // This prevents double toggling if the main button was already used
+                                             const currentTextVisible = !document.getElementById('text-content')?.classList.contains('hidden');
+                                             if(this.checked !== currentTextVisible) {
+                                                  window.toggleText();
+                                             }
                                         }
                                     });
                                 }
 
-                                // Toggle text display
-                                const textToggle = document.getElementById('toggle-text-display');
-                                if (textToggle) {
-                                    textToggle.addEventListener('change', function() {
-                                        if (typeof toggleText === 'function') {
-                                            toggleText();
-                                        }
-                                    });
+                                // --- Settings Link Handling ---
+                                const settingsLink = document.querySelector('a[href="#settings"]');
+                                if(settingsLink && settingsPanel) {
+                                     settingsLink.addEventListener('click', (e) => {
+                                        e.preventDefault();
+                                        settingsPanel.classList.remove('hidden');
+                                        // Optionally close mobile menu if open
+                                        // This requires access to the Alpine data, which might be complex here.
+                                        // A simpler approach is to just show the panel.
+                                     });
                                 }
+                                // --- End Settings Link Handling ---
+
 
                                 // Save settings button
                                 const saveButton = document.getElementById('save-settings');
-                                if (saveButton) {
+                                if (saveButton && settingsPanel) {
                                     saveButton.addEventListener('click', function() {
-                                        const settingsPanel = document.getElementById('settings-panel');
-                                        if (settingsPanel) {
-                                            settingsPanel.classList.add('hidden');
-                                        }
+                                        settingsPanel.classList.add('hidden');
                                         // Here you would normally save the settings to localStorage
-                                        alert('Settings saved!');
+                                        console.log('Settings saved (simulated)!'); // Changed alert to console log
                                     });
                                 }
 
                                 // Reset settings button
                                 const resetButton = document.getElementById('reset-settings');
                                 if (resetButton) {
+                                     const defaultSettings = {
+                                        'toggle-theme': true, // Assuming default is light
+                                        'toggle-text-display': true,
+                                        'toggle-highlights': true,
+                                        'layout-select': 'side-by-side',
+                                        'image-size': 50,
+                                        'toggle-animations': true,
+                                        'transition-speed': 'medium',
+                                        'toggle-keyboard-navigation': true,
+                                        'toggle-swipe-navigation': true,
+                                        'toggle-loop-alphabet': true,
+                                    };
+
                                     resetButton.addEventListener('click', function() {
-                                        toggles.forEach(toggle => {
-                                            toggle.checked = true;
-                                            const dot = toggle.parentElement.querySelector('.dot');
-                                            dot.classList.add('translate-x-6');
+                                        Object.keys(defaultSettings).forEach(key => {
+                                            const element = document.getElementById(key);
+                                            if (!element) return;
+
+                                            if (element.type === 'checkbox') {
+                                                element.checked = defaultSettings[key];
+                                            } else if (element.type === 'range') {
+                                                element.value = defaultSettings[key];
+                                                // Update range value display
+                                                const valueDisplay = document.getElementById(`${key}-value`);
+                                                if (valueDisplay) {
+                                                     valueDisplay.textContent = `${defaultSettings[key]}%`;
+                                                }
+                                            } else if (element.tagName === 'SELECT') {
+                                                element.value = defaultSettings[key];
+                                            }
                                         });
-
-                                        const layoutSelect = document.getElementById('layout-select');
-                                        if (layoutSelect) {
-                                            layoutSelect.value = 'side-by-side';
-                                        }
-
-                                        const imageSizeSlider = document.getElementById('image-size');
-                                        if (imageSizeSlider) {
-                                            imageSizeSlider.value = 50;
-                                            document.getElementById('image-size-value').textContent = '50%';
-                                        }
-
-                                        const transitionSpeed = document.getElementById('transition-speed');
-                                        if (transitionSpeed) {
-                                            transitionSpeed.value = 'medium';
+                                        console.log('Settings reset to defaults (simulated).');
+                                        // Trigger change on text toggle if needed for sync
+                                        if (textToggle && typeof window.toggleText === 'function') {
+                                            const currentTextVisible = !document.getElementById('text-content')?.classList.contains('hidden');
+                                            if (defaultSettings['toggle-text-display'] !== currentTextVisible) {
+                                                window.toggleText();
+                                            }
                                         }
                                     });
                                 }
@@ -874,25 +935,24 @@
                         </script>
                     </section>
                 </div>
+                 </element>
 
-            </element>
-            <element id="d78f6e80-afa7-4fe3-93fb-fb48c3314327" data-section-id="d78f6e80-afa7-4fe3-93fb-fb48c3314327">
-
-
-                <div id="root">
-                    <section id="instructions-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-                        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                 <element id="d78f6e80-afa7-4fe3-93fb-fb48c3314327" data-section-id="d78f6e80-afa7-4fe3-93fb-fb48c3314327">
+                     <!-- ... rest of your Instructions section ... -->
+                    <div id="root">
+                    <section id="instructions-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[90] hidden" x-data="{ showInstructions: false, dontShowAgain: false }" x-show="showInstructions" @keydown.escape.window="showInstructions = false" x-cloak>
+                        <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto" @click.away="showInstructions = false">
                             <div class="p-6">
                                 <div class="flex justify-between items-center mb-4">
                                     <h2 class="text-2xl font-bold text-gray-800">How to Use Alphabet Mnemonics</h2>
-                                    <button id="close-instructions" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                                    <button @click="showInstructions = false" class="text-gray-500 hover:text-gray-700 focus:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
                                 </div>
 
-                                <div class="space-y-6">
+                                <div class="space-y-6 text-base"> {/* Ensure readable text size */}
                                     <div>
                                         <h3 class="text-lg font-semibold text-gray-800 mb-2">Welcome to Alphabet Mnemonics!</h3>
                                         <p class="text-gray-600">
@@ -904,44 +964,49 @@
                                         <h3 class="text-lg font-semibold text-blue-700 mb-2">Basic Navigation</h3>
                                         <ul class="space-y-2 text-gray-700">
                                             <li class="flex items-start">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
-                </svg> Use the sidebar navigation to jump to any letter
+                </svg> <span>Use the <strong class="font-semibold">sidebar navigation</strong> (left side on desktop, menu button on mobile) to jump to any letter.</span>
                                             </li>
                                             <li class="flex items-start">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
-                </svg> Click the Previous/Next buttons to navigate between letters
+                </svg> <span>Click the <strong class="font-semibold">Previous/Next buttons</strong> (below the image/text) to move sequentially.</span>
                                             </li>
                                             <li class="flex items-start">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
-                </svg> Click on any letter button in the alphabet strip
+                </svg> <span>Click on any <strong class="font-semibold">letter button</strong> in the alphabet strip below the main view.</span>
+                                            </li>
+                                             <li class="flex items-start">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+                                                </svg> <span>Use the <strong class="font-semibold">sidebar toggle button</strong> (<svg class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg> / <svg class="inline h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>) on desktop to hide/show the sidebar.</span>
                                             </li>
                                         </ul>
                                     </div>
 
                                     <div>
                                         <h3 class="text-lg font-semibold text-gray-800 mb-2">Keyboard Shortcuts</h3>
-                                        <div class="grid grid-cols-2 gap-4">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <div class="flex items-center">
-                                                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 w-8 rounded mr-2">←</span>
+                                                <kbd class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 w-8 rounded mr-2 font-sans">←</kbd>
                                                 <span class="text-gray-600">Previous letter</span>
                                             </div>
                                             <div class="flex items-center">
-                                                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 w-8 rounded mr-2">→</span>
+                                                <kbd class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 w-8 rounded mr-2 font-sans">→</kbd>
                                                 <span class="text-gray-600">Next letter</span>
                                             </div>
                                             <div class="flex items-center">
-                                                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2">T</span>
+                                                <kbd class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2 font-sans">T</kbd>
                                                 <span class="text-gray-600">Toggle text visibility</span>
                                             </div>
                                             <div class="flex items-center">
-                                                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2">F</span>
-                                                <span class="text-gray-600">Fullscreen mode</span>
+                                                <kbd class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2 font-sans">F</kbd>
+                                                <span class="text-gray-600">Toggle fullscreen image</span>
                                             </div>
                                             <div class="flex items-center">
-                                                <span class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2">ESC</span>
+                                                <kbd class="inline-flex items-center justify-center bg-gray-200 text-gray-700 h-8 px-2 rounded mr-2 font-sans">ESC</kbd>
                                                 <span class="text-gray-600">Exit fullscreen</span>
                                             </div>
                                         </div>
@@ -955,19 +1020,19 @@
                                             </p>
                                             <ul class="space-y-2 text-gray-700">
                                                 <li class="flex items-start">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
-                  </svg> Swipe left to go to next letter
+                  </svg> <span><strong class="font-semibold">Swipe left</strong> on the image/text area to go to the next letter.</span>
                                                 </li>
                                                 <li class="flex items-start">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
-                  </svg> Swipe right to go to previous letter
+                  </svg> <span><strong class="font-semibold">Swipe right</strong> on the image/text area to go to the previous letter.</span>
                                                 </li>
                                                 <li class="flex items-start">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
-                  </svg> Tap the image to see it in fullscreen
+                  </svg> <span><strong class="font-semibold">Tap the image</strong> to see it in fullscreen.</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -978,19 +1043,19 @@
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div class="bg-gray-50 p-3 rounded-lg">
                                                 <div class="font-medium text-gray-700 mb-1">Toggle Text Display</div>
-                                                <p class="text-sm text-gray-600">Hide the text descriptions to focus solely on the visual mnemonics.</p>
+                                                <p class="text-sm text-gray-600">Hide text descriptions to focus on visuals.</p>
                                             </div>
                                             <div class="bg-gray-50 p-3 rounded-lg">
                                                 <div class="font-medium text-gray-700 mb-1">Fullscreen Mode</div>
-                                                <p class="text-sm text-gray-600">View the mnemonic image in fullscreen for better visibility.</p>
+                                                <p class="text-sm text-gray-600">View mnemonic images larger.</p>
                                             </div>
                                             <div class="bg-gray-50 p-3 rounded-lg">
                                                 <div class="font-medium text-gray-700 mb-1">Highlighted Examples</div>
-                                                <p class="text-sm text-gray-600">Example sentences with highlighted letters to reinforce learning.</p>
+                                                <p class="text-sm text-gray-600">Sentences reinforce the letter in context.</p>
                                             </div>
                                             <div class="bg-gray-50 p-3 rounded-lg">
                                                 <div class="font-medium text-gray-700 mb-1">Memory Tips</div>
-                                                <p class="text-sm text-gray-600">Helpful tips to better connect the letter with its mnemonic image.</p>
+                                                <p class="text-sm text-gray-600">Helpful tips to connect letter and image.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -999,30 +1064,30 @@
                                         <h3 class="text-lg font-semibold text-yellow-700 mb-2">Learning Tips</h3>
                                         <ul class="space-y-2 text-gray-700">
                                             <li class="flex items-start">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
-                </svg> Focus on how the letter shape relates to the image
+                </svg> <span>Focus on how the letter shape relates to the image.</span>
                                             </li>
                                             <li class="flex items-start">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
-                </svg> Practice writing the example sentences
+                </svg> <span>Practice writing the example sentences.</span>
                                             </li>
                                             <li class="flex items-start">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-2 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 mr-2 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
-                </svg> Create your own sentences with the target letter
+                </svg> <span>Create your own sentences with the target letter.</span>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
 
-                                <div class="mt-6 pt-4 border-t border-gray-200 flex justify-between">
+                                <div class="mt-6 pt-4 border-t border-gray-200 flex justify-between items-center">
                                     <label class="flex items-center">
-            <input type="checkbox" id="dont-show-again" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+            <input type="checkbox" x-model="dontShowAgain" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-4 w-4">
             <span class="ml-2 text-gray-700 text-sm">Don't show this again</span>
           </label>
-                                    <button id="got-it-button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                                    <button @click="showInstructions = false; if (dontShowAgain) localStorage.setItem('dontShowInstructions', 'true');" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
             Got it
           </button>
                                 </div>
@@ -1030,320 +1095,364 @@
                         </div>
 
                         <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                const modal = document.getElementById('instructions-modal');
-                                const closeButton = document.getElementById('close-instructions');
-                                const gotItButton = document.getElementById('got-it-button');
-                                const dontShowAgain = document.getElementById('dont-show-again');
+                             function initializeInstructionsModal() {
+                                const modalElement = document.getElementById('instructions-modal');
+                                if (!modalElement) return;
 
-                                // Show modal function
-                                function showInstructionsModal() {
-                                    if (modal) {
-                                        modal.classList.remove('hidden');
-                                    }
-                                }
-
-                                // Hide modal function
-                                function hideInstructionsModal() {
-                                    if (modal) {
-                                        modal.classList.add('hidden');
-
-                                        // If "don't show again" is checked, save to localStorage
-                                        if (dontShowAgain && dontShowAgain.checked) {
-                                            localStorage.setItem('dontShowInstructions', 'true');
-                                        }
-                                    }
-                                }
-
-                                // Close on button click
-                                if (closeButton) {
-                                    closeButton.addEventListener('click', hideInstructionsModal);
-                                }
-
-                                // Close on "Got it" button click
-                                if (gotItButton) {
-                                    gotItButton.addEventListener('click', hideInstructionsModal);
-                                }
-
-                                // Close on click outside the modal content
-                                if (modal) {
-                                    modal.addEventListener('click', function(e) {
-                                        if (e.target === modal) {
-                                            hideInstructionsModal();
-                                        }
-                                    });
-                                }
+                                // Use Alpine's reactive data store if available, otherwise use direct element access
+                                const alpineData = Alpine.closest(modalElement, '[x-data]');
 
                                 // Show instructions modal on page load if not previously dismissed
                                 const dontShow = localStorage.getItem('dontShowInstructions');
                                 if (dontShow !== 'true') {
-                                    // Only show after a short delay to ensure page has loaded
-                                    setTimeout(showInstructionsModal, 500);
+                                    // Use Alpine's reactivity to show the modal
+                                    setTimeout(() => {
+                                        if (alpineData && alpineData.__x) {
+                                            alpineData.__x.$data.showInstructions = true;
+                                         } else {
+                                             // Fallback if Alpine instance isn't ready/found
+                                             modalElement.classList.remove('hidden');
+                                         }
+                                     }, 500); // Delay slightly
                                 }
 
-                                // Add a global function to show instructions modal
-                                window.showInstructions = showInstructionsModal;
+                                 // Make the show function globally available if needed
+                                 window.showInstructions = () => {
+                                    if (alpineData && alpineData.__x) {
+                                        alpineData.__x.$data.showInstructions = true;
+                                    } else {
+                                        modalElement.classList.remove('hidden');
+                                    }
+                                 };
+                            }
+                            // Wait for Alpine to initialize
+                            document.addEventListener('alpine:init', () => {
+                                initializeInstructionsModal();
                             });
+                            // Fallback if alpine:init doesn't fire reliably
+                             document.addEventListener('DOMContentLoaded', () => {
+                                 // Ensure it runs even if alpine:init was missed or fired early
+                                 if (typeof window.showInstructions === 'undefined') {
+                                      initializeInstructionsModal();
+                                 }
+                             });
                         </script>
                     </section>
                 </div>
+                 </element>
+             </div>
+         </main>
 
-            </element>
-            </div>
-            </main>
+    </div><!-- End Root Alpine Component -->
 
-            <!-- {bodyScripts} -->
-</body>
-<script>
+    <!-- {bodyScripts} -->
+    <script>
     // Alphabet data (simplified for example)
     const alphabet = [
-{
- letter: 'a',
- word: 'Apple',
- image: 'https://placehold.co/600x400?text=A+for+Apple',
- description: 'The letter "A" looks like an apple with a stem at the top. Visualize it standing with the top as the stem.',
- example: 'The <span class="bg-yellow-200 font-bold">A</span>mazing <span class="bg-yellow-200 font-bold">a</span>pple <span class="bg-yellow-200 font-bold">a</span>ppeared <span class="bg-yellow-200 font-bold">a</span>bove the <span class="bg-yellow-200 font-bold">a</span>ncient tree.'
-},
-
-{
- letter: 'y',
- word: 'Yoyo',
- image: 'https://placehold.co/600x400?text=Y+for+Yoyo',
- description: '"Y" resembles a string with a yoyo hanging below.',
- example: 'The <span class="bg-yellow-200 font-bold">y</span>ellow <span class="bg-yellow-200 font-bold">y</span>oyo <span class="bg-yellow-200 font-bold">y</span>anked back up fast.'
-},
-{
- letter: 'z',
- word: 'Zebra',
- image: 'https://placehold.co/600x400?text=Z+for+Zebra',
- description: '"Z" looks like the zig-zag stripes on a zebra.',
- example: 'The <span class="bg-yellow-200 font-bold">z</span>ebra <span class="bg-yellow-200 font-bold">z</span>ipped through the <span class="bg-yellow-200 font-bold">z</span>oo <span class="bg-yellow-200 font-bold">z</span>one.'
-}
-];
-
-                             let currentLetterIndex = 0;
-                             let textVisible = true;
-
-                             // Function to show a specific letter
-                             function showLetter(letter) {
-                                 const index = alphabet.findIndex(item => item.letter === letter);
-                                 if (index !== -1) {
-                                     currentLetterIndex = index;
-                                     updateDisplay();
-                                 }
-                             }
-
-                             // Function to navigate to previous letter
-                             function prevLetter() {
-                                 currentLetterIndex = (currentLetterIndex - 1 + alphabet.length) % alphabet.length;
-                                 updateDisplay();
-                             }
-
-                             // Function to navigate to next letter
-                             function nextLetter() {
-                                 currentLetterIndex = (currentLetterIndex + 1) % alphabet.length;
-                                 updateDisplay();
-                             }
-
-                             // Function to toggle text visibility
-                             function toggleText() {
-                                 textVisible = !textVisible;
-                                 const textContent = document.getElementById('text-content');
-                                 const toggleButton = document.getElementById('toggle-text');
-
-                                 if (textVisible) {
-                                     textContent.classList.remove('hidden');
-                                     toggleButton.textContent = 'Hide Text';
-                                 } else {
-                                     textContent.classList.add('hidden');
-                                     toggleButton.textContent = 'Show Text';
-                                 }
-                             }
-
-                             // Function to open fullscreen image
-                             function openFullscreenImage() {
-                                 const modal = document.getElementById('fullscreen-modal');
-                                 const fullscreenImage = document.getElementById('fullscreen-image');
-                                 const letterData = alphabet[currentLetterIndex];
-
-                                 fullscreenImage.src = letterData.image;
-                                 fullscreenImage.alt = `${letterData.letter.toUpperCase()} for ${letterData.word} Mnemonic Visualization`;
-                                 modal.classList.remove('hidden');
-                                 document.body.classList.add('overflow-hidden');
-                             }
-
-                             // Function to close fullscreen image
-                             function closeFullscreenImage() {
-                                 const modal = document.getElementById('fullscreen-modal');
-                                 modal.classList.add('hidden');
-                                 document.body.classList.remove('overflow-hidden');
-                             }
-
-                             // Functions for fullscreen navigation
-                             function prevLetterFullscreen() {
-                                 prevLetter();
-                                 updateFullscreenImage();
-                             }
-
-                             function nextLetterFullscreen() {
-                                 nextLetter();
-                                 updateFullscreenImage();
-                             }
-
-                             function updateFullscreenImage() {
-                                 const fullscreenImage = document.getElementById('fullscreen-image');
-                                 const letterData = alphabet[currentLetterIndex];
-
-                                 fullscreenImage.src = letterData.image;
-                                 fullscreenImage.alt = `${letterData.letter.toUpperCase()} for ${letterData.word} Mnemonic Visualization`;
-                             }
-
-                             // Function to update the display with current letter data
-                             function updateDisplay() {
-                                 const letterData = alphabet[currentLetterIndex];
-                                 const letterImage = document.getElementById('letter-image');
-
-                                 // Update image
-                                 letterImage.src = letterData.image;
-                                 letterImage.alt = `${letterData.letter.toUpperCase()} for ${letterData.word} Mnemonic Visualization`;
-
-                                 // Update text content
-                                 document.querySelector('#text-content h2').textContent = letterData.letter.toUpperCase();
-                                 document.querySelector('#text-content p').innerHTML = `for <span class="font-bold">${letterData.letter.toUpperCase()}</span>${letterData.word.substring(1)}`;
-                                 document.querySelectorAll('#text-content .text-gray-600')[0].textContent = letterData.description;
-                                 document.querySelectorAll('#text-content .text-gray-600')[1].innerHTML = letterData.example;
-
-                                 // Update active menu item
-                                 document.querySelectorAll('nav a').forEach(link => {
-                                     if (link.getAttribute('href') === `#${letterData.letter}`) {
-                                         link.classList.add('bg-gray-100', 'font-medium', 'text-gray-700');
-                                         link.classList.remove('text-gray-600');
-                                     } else if (link.getAttribute('href').startsWith('#') && link.getAttribute('href') !== '#more' && link.getAttribute('href') !== '#settings') {
-                                         link.classList.remove('bg-gray-100', 'font-medium', 'text-gray-700');
-                                         link.classList.add('text-gray-600');
-                                     }
-                                 });
-                             }
-
-                             // Keyboard navigation
-                             document.addEventListener('keydown', function(e) {
-                                 if (e.key === 'ArrowLeft') {
-                                     prevLetter();
-                                 } else if (e.key === 'ArrowRight') {
-                                     nextLetter();
-                                 } else if (e.key === 'Escape' && !document.getElementById('fullscreen-modal').classList.contains('hidden')) {
-                                     closeFullscreenImage();
-                                 }
-                             });
-
-                             // Initialize display
-                             updateDisplay();
-                             const buttonContainer = document.getElementById('alphabet-buttons');
-
-alphabet.forEach((item, index) => {
-  const button = document.createElement('button');
-  button.textContent = item.letter.toUpperCase();
-  button.onclick = () => showLetter(item.letter);
-  button.className = `
-    w-10 h-10 rounded-md font-medium flex items-center justify-center
-    focus:outline-none focus:ring-2 focus:ring-opacity-50
-    ${
-      index === 0
-        ? 'bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-500'
-        : 'bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-gray-400'
-    }
-  `;
-  buttonContainer.appendChild(button);
+        { letter: 'a', word: 'Apple', image: 'https://placehold.co/600x400/A9CCE3/ffffff?text=A+for+Apple', description: 'The letter "A" looks like an apple with a stem at the top. Visualize it standing with the top as the stem.', example: 'The <span class="bg-yellow-200 font-bold">A</span>mazing <span class="bg-yellow-200 font-bold">a</span>pple <span class="bg-yellow-200 font-bold">a</span>ppeared <span class="bg-yellow-200 font-bold">a</span>bove the <span class="bg-yellow-200 font-bold">a</span>ncient tree.' },
+        { letter: 'b', word: 'Bee', image: 'https://placehold.co/600x400/FAD7A0/ffffff?text=B+for+Bee', description: 'The letter "B" looks like the two round parts of a bee\'s body.', example: '<span class="bg-yellow-200 font-bold">B</span>ig <span class="bg-yellow-200 font-bold">b</span>ees <span class="bg-yellow-200 font-bold">b</span>uzz <span class="bg-yellow-200 font-bold">b</span>y <span class="bg-yellow-200 font-bold">b</span>right <span class="bg-yellow-200 font-bold">b</span>looms.' },
+        { letter: 'c', word: 'Cat', image: 'https://placehold.co/600x400/AEB6BF/ffffff?text=C+for+Cat', description: 'The letter "C" is curved like a cat curled up asleep.', example: 'The <span class="bg-yellow-200 font-bold">c</span>ozy <span class="bg-yellow-200 font-bold">c</span>at <span class="bg-yellow-200 font-bold">c</span>uddled <span class="bg-yellow-200 font-bold">c</span>lose.' },
+        // ... add more letters D-X here ...
+        { letter: 'y', word: 'Yoyo', image: 'https://placehold.co/600x400/D2B4DE/ffffff?text=Y+for+Yoyo', description: '"Y" resembles a string with a yoyo hanging below.', example: 'The <span class="bg-yellow-200 font-bold">y</span>ellow <span class="bg-yellow-200 font-bold">y</span>oyo <span class="bg-yellow-200 font-bold">y</span>anked back up fast.' },
+        { letter: 'z', word: 'Zebra', image: 'https://placehold.co/600x400/A3E4D7/ffffff?text=Z+for+Zebra', description: '"Z" looks like the zig-zag stripes on a zebra.', example: 'The <span class="bg-yellow-200 font-bold">z</span>ebra <span class="bg-yellow-200 font-bold">z</span>ipped through the <span class="bg-yellow-200 font-bold">z</span>oo <span class="bg-yellow-200 font-bold">z</span>one.' }
+    ];
 
 
-  // Optional: updateSidebarHighlight inside updateDisplay
-  function updateSidebarHighlight() {
-    const current = alphabet[currentLetterIndex].letter;
-    Object.entries(sidebarLinkMap).forEach(([letter, el]) => {
-      if (letter === current) {
-        el.classList.add('bg-gray-100', 'text-gray-700');
-        el.classList.remove('text-gray-600');
-      } else {
-        el.classList.remove('bg-gray-100', 'text-gray-700');
-        el.classList.add('text-gray-600');
-      }
-    });
-  }
-});</script>
-<!-- Dynamic Sidebar and Mobile Menu Generation -->
-<script>
-    // Generate sidebar items for desktop (id="alphabet-sidebar")
-    const desktopSidebar = document.getElementById('alphabet-sidebar');
-    // Also keep a map for dynamic highlighting
-    const sidebarLinkMap = {};
-  
-    alphabet.forEach((item, index) => {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.href = `#${item.letter}`;
-      a.textContent = `${item.letter.toUpperCase()} - ${item.word}`;
-      a.onclick = () => {
-        showLetter(item.letter);
-        // Close mobile menu if open
-        if (typeof isOpen !== 'undefined') isOpen = false;
-      };
-      a.className = `flex items-center px-4 py-2 rounded-md font-medium ${
-        index === 0 ? 'text-gray-700 bg-gray-100' : 'text-gray-600 hover:bg-gray-100'
-      }`;
-      li.appendChild(a);
-      desktopSidebar.appendChild(li);
-      sidebarLinkMap[item.letter] = a;
-    });
-  
-    // Generate mobile menu items (id="alphabet-sidebar-list")
-    const mobileSidebar = document.getElementById('alphabet-sidebar-list');
-    alphabet.forEach((item, index) => {
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.href = `#${item.letter}`;
-      a.textContent = `${item.letter.toUpperCase()} - ${item.word}`;
-      a.onclick = () => {
-        showLetter(item.letter);
-        // Close mobile menu
-        if (typeof isOpen !== 'undefined') isOpen = false;
-      };
-      a.className = `flex items-center px-4 py-2 rounded-md font-medium ${
-        index === 0 ? 'text-gray-700 bg-gray-100' : 'text-gray-600 hover:bg-gray-100'
-      }`;
-      li.appendChild(a);
-      mobileSidebar.appendChild(li);
-    });
-  
-    // Append a static "More Letters..." link to both menus
-    [desktopSidebar, mobileSidebar].forEach(sidebar => {
-      const li = document.createElement('li');
-      li.innerHTML = `<a href="#more" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
-        More Letters...
-      </a>`;
-      sidebar.appendChild(li);
-    });
-  
-    // Function to update highlight in the desktop sidebar
-    function updateSidebarHighlight() {
-      const current = alphabet[currentLetterIndex].letter;
-      Object.entries(sidebarLinkMap).forEach(([letter, el]) => {
-        if (letter === current) {
-          el.classList.add('bg-gray-100', 'text-gray-700');
-          el.classList.remove('text-gray-600');
-        } else {
-          el.classList.remove('bg-gray-100', 'text-gray-700');
-          el.classList.add('text-gray-600');
+     let currentLetterIndex = 0;
+     let textVisible = true; // Keep track of text state separate from settings toggle
+
+     // DOM Elements (cache them)
+     const letterImage = document.getElementById('letter-image');
+     const textContentDiv = document.getElementById('text-content');
+     const letterHeading = textContentDiv?.querySelector('h2');
+     const wordParagraph = textContentDiv?.querySelector('p'); // First p tag
+     const descriptionParagraph = textContentDiv?.querySelectorAll('.text-gray-600')[0];
+     const exampleParagraph = textContentDiv?.querySelectorAll('.text-gray-600')[1];
+     const toggleTextMainButton = document.getElementById('toggle-text');
+     const fullscreenModal = document.getElementById('fullscreen-modal');
+     const fullscreenImage = document.getElementById('fullscreen-image');
+     const buttonContainer = document.getElementById('alphabet-buttons');
+     const desktopSidebarList = document.getElementById('alphabet-sidebar');
+     const mobileSidebarList = document.getElementById('alphabet-sidebar-list');
+     const sidebarLinkMap = {}; // To store references to sidebar links for highlighting
+
+     // Function to show a specific letter by its character ('a', 'b', etc.)
+     function showLetter(letterChar) {
+         const index = alphabet.findIndex(item => item.letter === letterChar.toLowerCase());
+         if (index !== -1) {
+             currentLetterIndex = index;
+             updateDisplay();
+             updateURLHash(letterChar); // Update URL hash
+             highlightActiveButton(); // Highlight alphabet strip button
+             updateSidebarHighlight(); // Highlight sidebar item
+         } else {
+             console.warn(`Letter ${letterChar} not found in alphabet data.`);
+         }
+     }
+
+     // Function to navigate to previous letter
+     function prevLetter() {
+         currentLetterIndex = (currentLetterIndex - 1 + alphabet.length) % alphabet.length;
+         updateDisplay();
+         updateURLHash(alphabet[currentLetterIndex].letter);
+         highlightActiveButton();
+         updateSidebarHighlight();
+     }
+
+     // Function to navigate to next letter
+     function nextLetter() {
+         currentLetterIndex = (currentLetterIndex + 1) % alphabet.length;
+         updateDisplay();
+         updateURLHash(alphabet[currentLetterIndex].letter);
+         highlightActiveButton();
+         updateSidebarHighlight();
+     }
+
+     // Function to update the URL hash
+     function updateURLHash(letter) {
+        // Avoid disrupting scroll behavior by using replaceState if hash is already correct or initial load
+        if (window.location.hash !== `#${letter}`) {
+            history.pushState(null, null, `#${letter}`);
         }
-      });
-    }
-  
-    // Extend your existing updateDisplay() function to call updateSidebarHighlight()
-    const originalUpdateDisplay = updateDisplay;
-    updateDisplay = function() {
-      originalUpdateDisplay();
-      updateSidebarHighlight();
-    };
-  </script>
-  
+     }
 
+     // Function to read the letter from URL hash on load
+     function loadLetterFromHash() {
+         const hash = window.location.hash;
+         if (hash && hash.length === 2 && /^[a-z]$/i.test(hash.substring(1))) {
+             showLetter(hash.substring(1));
+         } else {
+             // Default to first letter if no valid hash
+             updateDisplay();
+             highlightActiveButton();
+             updateSidebarHighlight();
+             updateURLHash(alphabet[0].letter); // Set hash for the first letter initially
+         }
+     }
+
+     // Function to toggle text visibility
+     window.toggleText = function() { // Ensure it's globally accessible for buttons
+         textVisible = !textVisible;
+         if (textContentDiv) {
+             textContentDiv.classList.toggle('hidden', !textVisible);
+         }
+         // Update both toggle buttons' text
+         const buttonText = textVisible ? 'Hide Text' : 'Show Text';
+         if (toggleTextMainButton) {
+             toggleTextMainButton.textContent = buttonText;
+         }
+         // Also update the button in the controls section
+         updateToggleTextButton(); // This function updates the controls button
+         // Sync with settings panel checkbox
+         const settingsCheckbox = document.getElementById('toggle-text-display');
+         if(settingsCheckbox) {
+            settingsCheckbox.checked = textVisible;
+         }
+     }
+
+     // Function to open fullscreen image
+     window.openFullscreenImage = function() { // Ensure global scope
+         if (fullscreenModal && fullscreenImage) {
+             const letterData = alphabet[currentLetterIndex];
+             fullscreenImage.src = letterData.image;
+             fullscreenImage.alt = `${letterData.letter.toUpperCase()} for ${letterData.word} Mnemonic Visualization (Fullscreen)`;
+
+              // Use Alpine to show the modal
+              const modalAlpineData = Alpine.find(fullscreenModal);
+              if (modalAlpineData) {
+                 modalAlpineData.isFsVisible = true;
+              } else {
+                 fullscreenModal.classList.remove('hidden'); // Fallback
+              }
+
+             document.body.classList.add('overflow-hidden'); // Prevent body scroll
+         }
+     }
+
+     // Function to close fullscreen image
+     window.closeFullscreenImage = function() { // Ensure global scope
+         if (fullscreenModal) {
+            // Alpine handles hiding via isFsVisible = false
+            const modalAlpineData = Alpine.find(fullscreenModal);
+            if (modalAlpineData && modalAlpineData.isFsVisible) {
+               modalAlpineData.isFsVisible = false;
+            } else {
+                fullscreenModal.classList.add('hidden'); // Fallback
+            }
+            document.body.classList.remove('overflow-hidden'); // Restore body scroll
+         }
+     }
+
+     // Functions for fullscreen navigation
+     window.prevLetterFullscreen = function() {
+         prevLetter();
+         updateFullscreenImage();
+     }
+
+     window.nextLetterFullscreen = function() {
+         nextLetter();
+         updateFullscreenImage();
+     }
+
+     function updateFullscreenImage() {
+         if (fullscreenImage && !fullscreenModal.classList.contains('hidden')) {
+             const letterData = alphabet[currentLetterIndex];
+             fullscreenImage.src = letterData.image;
+             fullscreenImage.alt = `${letterData.letter.toUpperCase()} for ${letterData.word} Mnemonic Visualization (Fullscreen)`;
+         }
+     }
+
+     // Function to update the main display area
+     function updateDisplay() {
+         if (!alphabet || alphabet.length === 0) return; // Guard against empty data
+         const letterData = alphabet[currentLetterIndex];
+
+         // Update image
+         if (letterImage) {
+             letterImage.src = letterData.image;
+             letterImage.alt = `${letterData.letter.toUpperCase()} for ${letterData.word} Mnemonic Visualization`;
+         }
+
+         // Update text content (with checks for element existence)
+         if (letterHeading) letterHeading.textContent = letterData.letter.toUpperCase();
+         if (wordParagraph) wordParagraph.innerHTML = `for <span class="font-bold">${letterData.letter.toUpperCase()}</span>${letterData.word.substring(1)}`;
+         if (descriptionParagraph) descriptionParagraph.textContent = letterData.description;
+         if (exampleParagraph) exampleParagraph.innerHTML = letterData.example;
+
+         // Ensure text visibility matches state
+          if (textContentDiv) {
+             textContentDiv.classList.toggle('hidden', !textVisible);
+          }
+          updateToggleTextButton(); // Sync buttons
+     }
+
+     // Highlight the active button in the alphabet strip
+     function highlightActiveButton() {
+        if (!buttonContainer) return;
+        const buttons = buttonContainer.querySelectorAll('button');
+        buttons.forEach((button, index) => {
+            if (index === currentLetterIndex) {
+                button.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300', 'focus:ring-gray-400');
+                button.classList.add('bg-primary', 'text-white', 'hover:bg-primary-600', 'focus:ring-primary'); // Use primary color
+            } else {
+                button.classList.remove('bg-primary', 'text-white', 'hover:bg-primary-600', 'focus:ring-primary');
+                button.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300', 'focus:ring-gray-400');
+            }
+        });
+     }
+
+     // Function to update highlight in the desktop sidebar
+     function updateSidebarHighlight() {
+        if (!alphabet || alphabet.length === 0) return;
+        const current = alphabet[currentLetterIndex].letter;
+        Object.entries(sidebarLinkMap).forEach(([letter, linkElement]) => {
+            if (linkElement) { // Check if the element exists
+                 if (letter === current) {
+                     linkElement.classList.add('bg-gray-100', 'text-gray-700', 'font-semibold');
+                     linkElement.classList.remove('text-gray-600', 'hover:bg-gray-100');
+                     // Scroll into view if needed
+                     // linkElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                 } else {
+                     linkElement.classList.remove('bg-gray-100', 'text-gray-700', 'font-semibold');
+                     linkElement.classList.add('text-gray-600', 'hover:bg-gray-100');
+                 }
+            }
+        });
+     }
+
+
+     // --- Initialization ---
+     document.addEventListener('DOMContentLoaded', () => {
+        // 1. Populate Alphabet Buttons
+        if (buttonContainer) {
+             alphabet.forEach((item) => {
+                 const button = document.createElement('button');
+                 button.textContent = item.letter.toUpperCase();
+                 button.onclick = () => showLetter(item.letter); // Use showLetter directly
+                 button.className = `w-9 h-9 md:w-10 md:h-10 rounded-md font-medium flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-opacity-50 transition-colors duration-150`; // Base classes
+                 // Initial inactive style
+                 button.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300', 'focus:ring-gray-400');
+                 buttonContainer.appendChild(button);
+             });
+        } else {
+             console.error("Element with ID 'alphabet-buttons' not found.");
+        }
+
+        // 2. Populate Sidebars & Map Links
+        function populateSidebar(sidebarElement, isMobile) {
+             if (!sidebarElement) return;
+             sidebarElement.innerHTML = ''; // Clear existing (if any)
+             alphabet.forEach((item) => {
+                 const li = document.createElement('li');
+                 const a = document.createElement('a');
+                 a.href = `#${item.letter}`;
+                 a.textContent = `${item.letter.toUpperCase()} - ${item.word}`;
+                 a.onclick = (e) => {
+                     e.preventDefault(); // Prevent default anchor jump
+                     showLetter(item.letter);
+                     // Close mobile menu if open (requires Alpine context or event)
+                     if (isMobile) {
+                         const rootData = Alpine.closest(sidebarElement, '[x-data]');
+                         if (rootData && rootData.__x) {
+                             rootData.__x.$data.isMobileMenuOpen = false;
+                         }
+                     }
+                 };
+                 // Base classes + hover. Active state handled by updateSidebarHighlight
+                 a.className = `flex items-center px-4 py-2 rounded-md font-medium text-gray-600 hover:bg-gray-100 transition-colors duration-150`;
+                 li.appendChild(a);
+                 sidebarElement.appendChild(li);
+
+                 // Store link reference ONLY for the desktop sidebar map
+                 if (!isMobile) {
+                    sidebarLinkMap[item.letter] = a;
+                 }
+             });
+
+             // Add "More Letters..." link (optional)
+            //  const li = document.createElement('li');
+            //  li.innerHTML = `<a href="#more" class="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+            //      More Letters...
+            //  </a>`;
+            //  sidebarElement.appendChild(li);
+        }
+
+        populateSidebar(desktopSidebarList, false);
+        populateSidebar(mobileSidebarList, true);
+
+        // 3. Load initial letter (from hash or default)
+        loadLetterFromHash();
+
+        // 4. Add listener for hash changes (back/forward buttons)
+        window.addEventListener('hashchange', loadLetterFromHash);
+
+        // 5. Initial display update (redundant? loadLetterFromHash calls updateDisplay)
+        // updateDisplay(); // Already called within loadLetterFromHash
+        // highlightActiveButton(); // Already called within loadLetterFromHash
+        // updateSidebarHighlight(); // Already called within loadLetterFromHash
+
+         // 6. Keyboard navigation setup (moved from controls section for better scope)
+         document.addEventListener('keydown', function(e) {
+             // Ignore if modifier keys are pressed or if focus is on an input element
+             if (e.metaKey || e.ctrlKey || e.altKey || document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'SELECT') {
+                return;
+             }
+
+             const isFsModalVisible = !document.getElementById('fullscreen-modal')?.classList.contains('hidden');
+
+             if (e.key === 'ArrowLeft') {
+                 e.preventDefault(); // Prevent page scroll
+                 isFsModalVisible ? prevLetterFullscreen() : prevLetter();
+             } else if (e.key === 'ArrowRight') {
+                 e.preventDefault(); // Prevent page scroll
+                 isFsModalVisible ? nextLetterFullscreen() : nextLetter();
+             }
+             // T, F, Esc keys are handled elsewhere (controls section JS, modal Alpine directive)
+         });
+
+     }); // End DOMContentLoaded
+
+    </script>
+
+</body>
 </html>
